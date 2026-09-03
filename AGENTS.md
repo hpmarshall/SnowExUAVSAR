@@ -22,4 +22,14 @@ Keep code as concise as possible, and as simple to understand.  Comment every li
 ## References
 Primary reference for SnowEx UAVSAR data: https://nsidc.org/sites/default/files/documents/technical-reference/snex_uavsar-v001-techref.pdf
 
+Primary references for SnowEx LiDAR:
+https://nsidc.org/data/snex20_qsi_sd_3m/versions/1
+https://nsidc.org/data/snex23_lidar/versions/1
+https://nsidc.org/sites/default/files/documents/user-guide/snex21_ps_dsm-v001-userguide.pdf
+https://nsidc.org/sites/default/files/documents/user-guide/snex20_gm_swe_sd.pdf
 
+## Extended search 
+SnowEx 2017 (Grand Mesa, Telluride)  and flights in 2014-2016 in mountainous areas
+
+## Task 2
+Create kml of all lidar acquisitions associated with SnowEx.  These should come from the references for SnowEx LiDAR above, and the Airborne Snow Observatory.  We are interested in any airborne lidar flown during the months January-April that overlaps with the UAVSAR flights from 2014-2021.

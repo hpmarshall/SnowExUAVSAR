@@ -1,0 +1,11 @@
+# large lidar/radar data files -- keep the repo code + tables only
+ASO_data/
+*.zip
+*.tif
+*.tiff
+*.laz
+*.las
+__pycache__/
+# query caches (regenerable via find_snowex_flights.py / find_snowex_lidar.py)
+asf_uavsar_cache_*.json
+cmr_lidar_cache.json

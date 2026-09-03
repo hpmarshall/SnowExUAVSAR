@@ -1,0 +1,253 @@
+location,state,date,bearing_deg,campaign,line_id
+American River Basin (Eldorado NF),CA,2020-01-31,340,dorado,34017
+American River Basin (Eldorado NF),CA,2020-02-12,340,dorado,34017
+American River Basin (Eldorado NF),CA,2020-02-19,340,dorado,34017
+American River Basin (Eldorado NF),CA,2020-02-26,340,dorado,34017
+American River Basin (Eldorado NF),CA,2020-03-11,340,dorado,34017
+Lakes Basin (Sierra NF),CA,2020-01-31,173,sierra,17305
+Lakes Basin (Sierra NF),CA,2020-01-31,354,sierra,35402
+Lakes Basin (Sierra NF),CA,2020-02-12,173,sierra,17305
+Lakes Basin (Sierra NF),CA,2020-02-12,354,sierra,35402
+Lakes Basin (Sierra NF),CA,2020-02-19,173,sierra,17305
+Lakes Basin (Sierra NF),CA,2020-02-19,354,sierra,35402
+Lakes Basin (Sierra NF),CA,2020-02-26,173,sierra,17305
+Lakes Basin (Sierra NF),CA,2020-02-26,354,sierra,35402
+Lakes Basin (Sierra NF),CA,2020-03-11,173,sierra,17305
+Lakes Basin (Sierra NF),CA,2020-03-11,354,sierra,35402
+SMAP cal/val (Sierra Nevada crossing),CA,2014-01-16,330,SMAP13,33006
+SMAP cal/val (Sierra Nevada crossing),CA,2014-01-17,135,SMAP13,13500
+SMAP cal/val (Sierra Nevada crossing),CA,2014-02-11,135,SMAP13,13500
+SMAP cal/val (Sierra Nevada crossing),CA,2014-02-11,330,SMAP13,33006
+SMAP cal/val (Sierra Nevada crossing),CA,2014-04-01,135,SMAP13,13500
+SMAP cal/val (Sierra Nevada crossing),CA,2014-04-01,330,SMAP13,33006
+SMAP cal/val (Sierra Nevada crossing),CA,2015-01-06,330,SMAP13,33010
+Sagehen Creek (Donner),CA,2019-12-20,39,donner,03904
+Sagehen Creek (Donner),CA,2020-01-31,39,donner,03904
+Sagehen Creek (Donner),CA,2020-02-12,39,donner,03904
+Sagehen Creek (Donner),CA,2020-02-19,39,donner,03904
+Sagehen Creek (Donner),CA,2020-02-26,39,donner,03904
+Sagehen Creek (Donner),CA,2020-03-11,39,donner,03904
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-05,101,tuolum,10104
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-05,271,tuolum,27110
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-05,316,tuolum,31610
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-06,101,tuolum,10104
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-06,271,tuolum,27110
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-06,316,tuolum,31610
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-07,101,tuolum,10104
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-07,271,tuolum,27110
+Tuolumne Meadows (Sierra Nevada),CA,2016-04-07,316,tuolum,31610
+Cameron Pass (Rocky Mtn NP),CO,2020-02-01,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2020-02-12,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2020-02-12,321,rockmt,32109
+Cameron Pass (Rocky Mtn NP),CO,2020-02-19,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2020-02-19,321,rockmt,32109
+Cameron Pass (Rocky Mtn NP),CO,2020-02-26,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2020-03-12,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2020-03-12,321,rockmt,32109
+Cameron Pass (Rocky Mtn NP),CO,2021-01-15,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-01-20,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-01-27,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-01-27,321,rockmt,32109
+Cameron Pass (Rocky Mtn NP),CO,2021-02-03,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-02-03,321,rockmt,32109
+Cameron Pass (Rocky Mtn NP),CO,2021-02-23,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-03-03,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-03-03,321,rockmt,32109
+Cameron Pass (Rocky Mtn NP),CO,2021-03-10,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-03-10,321,rockmt,32109
+Cameron Pass (Rocky Mtn NP),CO,2021-03-16,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-03-22,141,rockmt,14107
+Cameron Pass (Rocky Mtn NP),CO,2021-03-22,321,rockmt,32109
+East River (Peeler Peak),CO,2019-12-20,137,peeler,13711
+East River (Peeler Peak),CO,2019-12-20,316,peeler,31619
+East River (Peeler Peak),CO,2020-02-12,137,peeler,13711
+East River (Peeler Peak),CO,2020-02-12,316,peeler,31619
+East River (Peeler Peak),CO,2020-02-19,137,peeler,13711
+East River (Peeler Peak),CO,2020-02-19,316,peeler,31619
+East River (Peeler Peak),CO,2020-02-26,137,peeler,13711
+East River (Peeler Peak),CO,2020-02-26,316,peeler,31619
+East River (Peeler Peak),CO,2020-03-12,137,peeler,13711
+East River (Peeler Peak),CO,2020-03-12,316,peeler,31619
+Fraser Experimental Forest,CO,2020-02-01,233,fraser,23307
+Fraser Experimental Forest,CO,2020-02-12,52,fraser,05209
+Fraser Experimental Forest,CO,2020-02-12,233,fraser,23307
+Fraser Experimental Forest,CO,2020-02-19,52,fraser,05209
+Fraser Experimental Forest,CO,2020-02-19,233,fraser,23307
+Fraser Experimental Forest,CO,2020-02-26,52,fraser,05209
+Fraser Experimental Forest,CO,2020-02-26,233,fraser,23307
+Fraser Experimental Forest,CO,2020-03-12,52,fraser,05209
+Fraser Experimental Forest,CO,2020-03-12,233,fraser,23307
+Fraser Experimental Forest,CO,2021-01-15,52,fraser,05209
+Fraser Experimental Forest,CO,2021-01-20,52,fraser,05209
+Fraser Experimental Forest,CO,2021-01-27,52,fraser,05209
+Fraser Experimental Forest,CO,2021-01-27,233,fraser,23306
+Fraser Experimental Forest,CO,2021-02-03,52,fraser,05209
+Fraser Experimental Forest,CO,2021-02-03,233,fraser,23306
+Fraser Experimental Forest,CO,2021-02-23,52,fraser,05209
+Fraser Experimental Forest,CO,2021-03-03,52,fraser,05209
+Fraser Experimental Forest,CO,2021-03-03,233,fraser,23306
+Fraser Experimental Forest,CO,2021-03-10,52,fraser,05209
+Fraser Experimental Forest,CO,2021-03-10,233,fraser,23306
+Fraser Experimental Forest,CO,2021-03-16,52,fraser,05209
+Fraser Experimental Forest,CO,2021-03-16,233,fraser,23306
+Fraser Experimental Forest,CO,2021-03-22,52,fraser,05209
+Fraser Experimental Forest,CO,2021-03-22,233,fraser,23306
+Grand Mesa,CO,2017-02-06,78,grmesa,07805
+Grand Mesa,CO,2017-02-06,80,grmesa,08006
+Grand Mesa,CO,2017-02-06,260,grmesa,26006
+Grand Mesa,CO,2017-02-22,78,grmesa,07805
+Grand Mesa,CO,2017-02-22,80,grmesa,08006
+Grand Mesa,CO,2017-02-22,260,grmesa,26006
+Grand Mesa,CO,2017-02-25,78,grmesa,07805
+Grand Mesa,CO,2017-02-25,80,grmesa,08006
+Grand Mesa,CO,2017-02-25,260,grmesa,26006
+Grand Mesa,CO,2017-03-08,78,grmesa,07805
+Grand Mesa,CO,2017-03-08,80,grmesa,08006
+Grand Mesa,CO,2017-03-08,260,grmesa,26006
+Grand Mesa,CO,2017-03-31,78,grmesa,07805
+Grand Mesa,CO,2017-03-31,80,grmesa,08006
+Grand Mesa,CO,2017-03-31,260,grmesa,26006
+Grand Mesa,CO,2020-02-01,93,grmesa,09305
+Grand Mesa,CO,2020-02-01,274,grmesa,27416
+Grand Mesa,CO,2020-02-12,93,grmesa,09305
+Grand Mesa,CO,2020-02-12,274,grmesa,27416
+Grand Mesa,CO,2020-02-19,93,grmesa,09305
+Grand Mesa,CO,2020-02-19,274,grmesa,27416
+Grand Mesa,CO,2020-02-26,93,grmesa,09305
+Grand Mesa,CO,2020-02-26,274,grmesa,27416
+Grand Mesa,CO,2020-03-12,93,grmesa,09305
+Grand Mesa,CO,2020-03-12,274,grmesa,27416
+Grand Mesa,CO,2021-01-27,274,grmesa,27416
+Grand Mesa,CO,2021-02-03,274,grmesa,27416
+Grand Mesa,CO,2021-02-10,274,grmesa,27416
+Grand Mesa,CO,2021-03-03,274,grmesa,27416
+Grand Mesa,CO,2021-03-10,274,grmesa,27416
+Grand Mesa,CO,2021-03-16,274,grmesa,27416
+Grand Mesa,CO,2021-03-22,274,grmesa,27416
+Grand Mesa (pre-SnowEx 2015),CO,2015-04-28,81,GrMesa,08112
+Grand Mesa (pre-SnowEx 2015),CO,2015-04-28,261,GrMesa,26108
+Senator Beck Basin (Ironton),CO,2020-02-12,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2020-02-19,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2020-02-26,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2020-03-12,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-01-15,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-01-21,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-01-28,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-02-04,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-02-11,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-02-23,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-03-03,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-03-10,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-03-16,14,irnton,01406
+Senator Beck Basin (Ironton),CO,2021-03-22,14,irnton,01406
+Senator Beck Basin (Telluride),CO,2017-02-06,170,tellur,1701T
+Senator Beck Basin (Telluride),CO,2017-02-06,350,tellur,3503F
+Senator Beck Basin (Telluride),CO,2017-02-22,170,tellur,1701T
+Senator Beck Basin (Telluride),CO,2017-02-22,350,tellur,3503F
+Senator Beck Basin (Telluride),CO,2017-02-25,170,tellur,1701T
+Senator Beck Basin (Telluride),CO,2017-02-25,350,tellur,3503F
+Senator Beck Basin (Telluride),CO,2017-03-08,170,tellur,1701T
+Senator Beck Basin (Telluride),CO,2017-03-08,350,tellur,3503F
+Senator Beck Basin (Telluride),CO,2017-03-31,170,tellur,1701T
+Senator Beck Basin (Telluride),CO,2017-03-31,350,tellur,3503F
+Slumgullion Landslide (Lake City),CO,2014-04-01,35,Slumgl,03501
+Slumgullion Landslide (Lake City),CO,2014-04-01,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2014-04-01,215,Slumgl,21501
+Slumgullion Landslide (Lake City),CO,2014-04-01,305,Slumgl,30502
+Slumgullion Landslide (Lake City),CO,2014-04-04,35,Slumgl,03501
+Slumgullion Landslide (Lake City),CO,2014-04-04,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2014-04-04,215,Slumgl,21501
+Slumgullion Landslide (Lake City),CO,2014-04-04,305,Slumgl,30502
+Slumgullion Landslide (Lake City),CO,2015-04-28,35,Slumgl,03501
+Slumgullion Landslide (Lake City),CO,2015-04-28,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2015-04-28,215,Slumgl,21501
+Slumgullion Landslide (Lake City),CO,2015-04-28,305,Slumgl,30502
+Slumgullion Landslide (Lake City),CO,2016-03-28,35,Slumgl,03501
+Slumgullion Landslide (Lake City),CO,2016-03-28,305,Slumgl,30502
+Slumgullion Landslide (Lake City),CO,2016-04-01,35,Slumgl,03501
+Slumgullion Landslide (Lake City),CO,2016-04-01,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2016-04-01,215,Slumgl,21501
+Slumgullion Landslide (Lake City),CO,2016-04-01,305,Slumgl,30502
+Slumgullion Landslide (Lake City),CO,2016-04-08,35,Slumgl,03501
+Slumgullion Landslide (Lake City),CO,2016-04-08,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2016-04-08,215,Slumgl,21501
+Slumgullion Landslide (Lake City),CO,2016-04-08,305,Slumgl,30502
+Slumgullion Landslide (Lake City),CO,2017-02-06,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2017-02-22,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2017-02-25,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2017-03-08,125,Slumgl,12502
+Slumgullion Landslide (Lake City),CO,2017-03-31,125,Slumgl,12502
+Boise River Basin (Lowman),ID,2019-12-20,52,lowman,05208
+Boise River Basin (Lowman),ID,2019-12-20,232,lowman,23205
+Boise River Basin (Lowman),ID,2020-01-31,52,lowman,05208
+Boise River Basin (Lowman),ID,2020-01-31,232,lowman,23205
+Boise River Basin (Lowman),ID,2020-02-13,52,lowman,05208
+Boise River Basin (Lowman),ID,2020-02-13,232,lowman,23205
+Boise River Basin (Lowman),ID,2020-02-21,52,lowman,05208
+Boise River Basin (Lowman),ID,2020-02-21,232,lowman,23205
+Boise River Basin (Lowman),ID,2020-03-11,52,lowman,05208
+Boise River Basin (Lowman),ID,2020-03-11,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-01-15,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-01-20,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-01-27,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-02-03,52,lowman,05208
+Boise River Basin (Lowman),ID,2021-02-03,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-02-10,52,lowman,05208
+Boise River Basin (Lowman),ID,2021-02-10,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-02-23,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-03-03,52,lowman,05208
+Boise River Basin (Lowman),ID,2021-03-03,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-03-10,52,lowman,05208
+Boise River Basin (Lowman),ID,2021-03-10,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-03-16,52,lowman,05208
+Boise River Basin (Lowman),ID,2021-03-16,232,lowman,23205
+Boise River Basin (Lowman),ID,2021-03-22,52,lowman,05208
+Boise River Basin (Lowman),ID,2021-03-22,232,lowman,23205
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-12,129,idahos,12902
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-12,143,idahos,14305
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-12,274,idahos,27441
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-13,129,idahos,12902
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-13,143,idahos,14305
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-13,274,idahos,27441
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-16,129,idahos,12902
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-17,129,idahos,12902
+Idaho 2025 (Boise Mtns/Sawtooths/McCall),ID,2025-03-17,274,idahos,27441
+Reynolds Creek (Silver City),ID,2020-01-31,167,silver,16718
+Reynolds Creek (Silver City),ID,2020-01-31,347,silver,34715
+Reynolds Creek (Silver City),ID,2020-02-13,167,silver,16718
+Reynolds Creek (Silver City),ID,2020-02-13,347,silver,34715
+Reynolds Creek (Silver City),ID,2020-02-21,167,silver,16718
+Reynolds Creek (Silver City),ID,2020-02-21,347,silver,34715
+Reynolds Creek (Silver City),ID,2020-03-11,167,silver,16718
+Reynolds Creek (Silver City),ID,2020-03-11,347,silver,34715
+Central Agricultural Research Center (Utica),MT,2021-01-15,210,uticam,21003
+Central Agricultural Research Center (Utica),MT,2021-01-20,210,uticam,21003
+Central Agricultural Research Center (Utica),MT,2021-02-23,210,uticam,21003
+Jemez River (Los Alamos),NM,2020-02-12,359,alamos,35915
+Jemez River (Los Alamos),NM,2020-02-19,359,alamos,35915
+Jemez River (Los Alamos),NM,2020-02-26,359,alamos,35915
+Little Cottonwood Canyon (Salt Lake City),UT,2020-01-31,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2020-01-31,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2020-02-13,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2020-02-13,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2020-02-21,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2020-02-21,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2020-03-12,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2020-03-12,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2021-01-15,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-01-21,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-01-28,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-02-03,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-02-03,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2021-02-10,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-02-10,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2021-02-23,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-02-23,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2021-03-03,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-03-03,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2021-03-10,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-03-10,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2021-03-16,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-03-16,271,stlake,27129
+Little Cottonwood Canyon (Salt Lake City),UT,2021-03-22,91,stlake,09127
+Little Cottonwood Canyon (Salt Lake City),UT,2021-03-22,271,stlake,27129

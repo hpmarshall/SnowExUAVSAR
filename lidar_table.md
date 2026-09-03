@@ -1,0 +1,127 @@
+# SnowEx-Associated Airborne LiDAR Acquisitions (Jan-Apr, overlapping 2014-2021 UAVSAR)
+
+110 acquisitions across 27 sites. Sources: NSIDC/CMR granule metadata
+(ASO_50M_SWE 2013-19, SNEX20_QSI_SD 0.5m + SNEX20_QSI_SD_3m, SNEX20_GM_Lidar, SNEX21_PS_DSM,
+SNEX_MCS_Lidar) plus documented ASO SnowEx 2017/2020 flights not present in CMR.
+
+| location                                    | state   | date       | dataset                                        | uavsar_overlap       | note                                           | flag              |
+|:--------------------------------------------|:--------|:-----------|:-----------------------------------------------|:---------------------|:-----------------------------------------------|:------------------|
+| Cherry-Eleanor                              | CA      | 2016-04-01 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Cherry-Eleanor                              | CA      | 2016-04-07 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Cherry-Eleanor                              | CA      | 2016-04-16 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Cherry-Eleanor                              | CA      | 2016-04-26 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Cherry-Eleanor                              | CA      | 2017-01-29 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Cherry-Eleanor                              | CA      | 2018-04-23 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| San Joaquin West (JW)                       | CA      | 2018-04-23 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra,tuolum |                                                |                   |
+| San Joaquin West (JW)                       | CA      | 2019-03-15 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra,tuolum |                                                |                   |
+| Kings Canyon                                | CA      | 2015-04-03 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kings Canyon                                | CA      | 2015-04-12 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kings Canyon                                | CA      | 2015-04-26 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kings Canyon                                | CA      | 2018-04-26 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kings Canyon                                | CA      | 2019-03-16 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kings Canyon                                | CA      | 2019-03-26 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kings Canyon                                | CA      | 2019-04-18 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kings Canyon                                | CA      | 2019-04-27 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kings Canyon                                | CA      | 2019-04-28 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kern                                        | CA      | 2018-04-26 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Kern                                        | CA      | 2019-04-17 | ASO lidar (NSIDC 2013-19)                      | sierra               |                                                |                   |
+| Lakes Basin (Mammoth)                       | CA      | 2015-04-28 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra        |                                                |                   |
+| Lakes Basin (Mammoth)                       | CA      | 2017-01-28 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra        |                                                |                   |
+| Lakes Basin (Mammoth)                       | CA      | 2018-04-22 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra        |                                                |                   |
+| Lakes Basin (Mammoth)                       | CA      | 2019-03-09 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra        |                                                |                   |
+| Merced Basin                                | CA      | 2014-03-24 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Merced Basin                                | CA      | 2014-04-06 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Merced Basin                                | CA      | 2014-04-14 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Merced Basin                                | CA      | 2014-04-23 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Merced Basin                                | CA      | 2014-04-29 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Merced Basin                                | CA      | 2015-04-28 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Merced Basin                                | CA      | 2018-04-25 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Merced Basin                                | CA      | 2019-03-29 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Rush Creek                                  | CA      | 2015-03-26 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra,tuolum |                                                |                   |
+| San Joaquin South Fork (SF)                 | CA      | 2018-04-23 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra,tuolum |                                                |                   |
+| San Joaquin South Fork (SF)                 | CA      | 2019-03-17 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra,tuolum |                                                |                   |
+| San Joaquin Basin                           | CA      | 2018-03-04 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra,tuolum |                                                |                   |
+| San Joaquin Basin                           | CA      | 2018-04-22 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra,tuolum |                                                |                   |
+| San Joaquin Basin                           | CA      | 2019-03-25 | ASO lidar (NSIDC 2013-19)                      | SMAP13,sierra,tuolum |                                                |                   |
+| Tuolumne Basin                              | CA      | 2013-04-03 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                | outside 2014-2021 |
+| Tuolumne Basin                              | CA      | 2013-04-29 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                | outside 2014-2021 |
+| Tuolumne Basin                              | CA      | 2014-03-23 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2014-04-07 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2014-04-20 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2014-04-28 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2015-02-17 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2015-03-05 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2015-03-25 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2015-04-03 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2015-04-09 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2015-04-15 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2015-04-27 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2016-03-26 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2016-04-01 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2016-04-07 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2016-04-16 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2016-04-26 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2017-01-29 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne Basin                              | CA      | 2018-04-23 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne East (TE)                          | CA      | 2017-01-29 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne East (TE)                          | CA      | 2019-03-24 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Tuolumne East (TE)                          | CA      | 2019-04-17 | ASO lidar (NSIDC 2013-19)                      | SMAP13,tuolum        |                                                |                   |
+| Blue River                                  | CO      | 2019-04-19 | ASO lidar (NSIDC 2013-19)                      | fraser               |                                                |                   |
+| Crested Butte / East River                  | CO      | 2016-04-04 | ASO lidar (NSIDC 2013-19)                      | peeler               |                                                |                   |
+| Crested Butte / East River                  | CO      | 2018-03-30 | ASO lidar (NSIDC 2013-19)                      | peeler               |                                                |                   |
+| Castle/Maroon                               | CO      | 2019-04-07 | ASO lidar (NSIDC 2013-19)                      | peeler               |                                                |                   |
+| Gunnison East / East River                  | CO      | 2018-03-31 | ASO lidar (NSIDC 2013-19)                      | peeler               |                                                |                   |
+| Gunnison East / East River                  | CO      | 2019-04-07 | ASO lidar (NSIDC 2013-19)                      | peeler               |                                                |                   |
+| Gunnison Taylor                             | CO      | 2018-03-30 | ASO lidar (NSIDC 2013-19)                      | peeler               |                                                |                   |
+| Gunnison Taylor                             | CO      | 2019-04-08 | ASO lidar (NSIDC 2013-19)                      | peeler               |                                                |                   |
+| Rio Grande                                  | CO      | 2015-04-07 | ASO lidar (NSIDC 2013-19)                      | Slumgl,tellur        |                                                |                   |
+| Rio Grande                                  | CO      | 2016-04-03 | ASO lidar (NSIDC 2013-19)                      | Slumgl,tellur        |                                                |                   |
+| Uncompahgre Basin                           | CO      | 2014-03-20 | ASO lidar (NSIDC 2013-19)                      | irnton,tellur        | approx footprint (bad CMR metadata)            |                   |
+| Crested Butte / East River                  | CO      | 2020-02-14 | ASO SnowEx20 (East River, flown Feb 14-20)     | peeler               | ASO SnowEx20 (East River, flown Feb 14-20)     |                   |
+| Grand Mesa                                  | CO      | 2017-02-08 | ASO SnowEx17; approx footprint                 | GrMesa,grmesa        | ASO SnowEx17; approx footprint                 |                   |
+| Grand Mesa                                  | CO      | 2017-02-16 | ASO SnowEx17; approx footprint                 | GrMesa,grmesa        | ASO SnowEx17; approx footprint                 |                   |
+| Grand Mesa                                  | CO      | 2017-02-25 | ASO SnowEx17; approx footprint                 | GrMesa,grmesa        | ASO SnowEx17; approx footprint                 |                   |
+| Grand Mesa                                  | CO      | 2020-02-01 | ASO SnowEx20 (flown Feb 1-2)                   | GrMesa,grmesa        | ASO SnowEx20 (flown Feb 1-2)                   |                   |
+| Grand Mesa                                  | CO      | 2020-02-13 | ASO SnowEx20                                   | GrMesa,grmesa        | ASO SnowEx20                                   |                   |
+| Gunnison Taylor                             | CO      | 2020-02-20 | ASO SnowEx20                                   | peeler               | ASO SnowEx20                                   |                   |
+| Reynolds Creek                              | ID      | 2020-02-18 | ASO SnowEx20 (Reynolds Creek, flown Feb 18-19) | silver               | ASO SnowEx20 (Reynolds Creek, flown Feb 18-19) |                   |
+| Grand Mesa                                  | CO      | 2020-02-01 | QSI lidar Grand Mesa IOP (SNEX20_GM_Lidar)     | GrMesa,grmesa        |                                                |                   |
+| Cameron Pass                                | CO      | 2021-03-19 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | rockmt               |                                                |                   |
+| Fraser Experimental Forest                  | CO      | 2020-02-11 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | fraser               |                                                |                   |
+| Fraser Experimental Forest                  | CO      | 2021-03-19 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | fraser               |                                                |                   |
+| Banner Summit                               | ID      | 2020-02-18 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | lowman               |                                                |                   |
+| Banner Summit                               | ID      | 2021-03-15 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | lowman               |                                                |                   |
+| Dry Creek                                   | ID      | 2020-02-19 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | lowman               |                                                |                   |
+| Mores Creek Summit                          | ID      | 2020-02-09 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | idahos,lowman        |                                                |                   |
+| Mores Creek Summit                          | ID      | 2021-03-15 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | idahos,lowman        |                                                |                   |
+| Little Cottonwood Canyon                    | UT      | 2021-03-18 | QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])         | stlake               |                                                |                   |
+| Central Agricultural Research Center (CARC) | MT      | 2021-01-15 | Prairie Station UAV-lidar (SNEX21_PS_DSM)      | uticam               | snow-off                                       |                   |
+| Central Agricultural Research Center (CARC) | MT      | 2021-01-21 | Prairie Station UAV-lidar (SNEX21_PS_DSM)      | uticam               |                                                |                   |
+| Central Agricultural Research Center (CARC) | MT      | 2021-01-22 | Prairie Station UAV-lidar (SNEX21_PS_DSM)      | uticam               |                                                |                   |
+| Central Agricultural Research Center (CARC) | MT      | 2021-01-29 | Prairie Station UAV-lidar (SNEX21_PS_DSM)      | uticam               |                                                |                   |
+| Central Agricultural Research Center (CARC) | MT      | 2021-02-17 | Prairie Station UAV-lidar (SNEX21_PS_DSM)      | uticam               |                                                |                   |
+| Central Agricultural Research Center (CARC) | MT      | 2021-02-18 | Prairie Station UAV-lidar (SNEX21_PS_DSM)      | uticam               |                                                |                   |
+| Central Agricultural Research Center (CARC) | MT      | 2021-02-24 | Prairie Station UAV-lidar (SNEX21_PS_DSM)      | uticam               |                                                |                   |
+| Central Agricultural Research Center (CARC) | MT      | 2021-03-04 | Prairie Station UAV-lidar (SNEX21_PS_DSM)      | uticam               |                                                |                   |
+| Mores Creek Summit                          | ID      | 2022-02-17 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2022-03-17 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2022-04-07 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2023-02-09 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2023-03-16 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2023-04-05 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2024-01-15 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2024-02-13 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2024-03-15 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2024-04-18 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2025-01-13 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2025-01-29 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+| Mores Creek Summit                          | ID      | 2025-04-04 | Mores Creek Summit lidar (SNEX_MCS_Lidar)      | idahos,lowman        |                                                | outside 2014-2021 |
+
+## Notes and caveats
+
+- **QSI 0.5 m and 3 m** products cover identical flights; each is listed once.
+- **ASO SnowEx 2020** (Grand Mesa 2/01-02 + 2/13, East River 2/14-20, Taylor 2/20, Reynolds Creek 2/18-19) products are downloaded locally in `ASO_data/` (git-ignored); their footprints in the KML are exact, read from the product GeoTIFFs. **ASO SnowEx 2017** (Grand Mesa 2/08, 2/16, 2/25) is not in CMR; dates from SnowEx17 literature, footprint approximated from the QSI Grand Mesa granule.
+- **USCOUB (Uncompahgre 2014-03-20)** granule has corrupt CMR spatial metadata (a California polygon); replaced with an approximate Senator Beck-area box.
+- **SNEX_MCS_Lidar** (Mores Creek Summit, 13 Jan-Apr acquisitions 2022-2025) post-dates the UAVSAR flights but sits on the repo AOI and the lowman lines; flagged "outside 2014-2021".
+- **Excluded by the overlap test**: Kaweah, Conejos, Olympic Mtns (no UAVSAR line intersects them). **SNEX23_Lidar** (Alaska) excluded outright. ASO Inc. 2021+ commercial flights are not catalogued publicly and are not included.
+- Some CA overlaps (Kern, Kings Canyon vs the sierra line) are edge intersections of long UAVSAR swaths with large ASO basin rectangles -- verify visually in Google Earth before relying on them.
