@@ -107,6 +107,27 @@ for sn, entries in lidar_raw.items():                           # walk each coll
             note = "CMR rect clipped to Rio Grande Headwaters watershed (approx)"
         acqs.setdefault((sn, site, date), {"poly": poly, "note": note})  # dedupe resolutions
 
+def _valid_data_outline(src, band, exclude_zero=False):
+    """Vectorize the valid-data mask of an open rasterio dataset into a WGS84 outline."""
+    import numpy as np                                          # mask arithmetic
+    from rasterio.features import shapes                        # vectorize the valid-data mask
+    from rasterio.warp import transform_geom                    # UTM -> WGS84 geometry
+    from shapely.geometry import shape as shp                   # GeoJSON -> shapely
+    from shapely.ops import unary_union                         # merge mask pieces
+    from shapely.geometry import Polygon as Poly                # rebuild parts without holes
+    mask = src.read_masks(1) > 0                                # True where real data exists
+    if np.issubdtype(band.dtype, np.floating):                  # NaN nodata is missed by read_masks
+        mask &= np.isfinite(band)
+    if exclude_zero:                                            # 0 used as a fill value (DEMs, intensity)
+        mask &= band != 0
+    geoms = [shp(g) for g, v in shapes(mask.astype("uint8"), mask=mask, transform=src.transform) if v]
+    merged = unary_union(geoms)                                 # merge mask pieces
+    parts = [Poly(g.exterior) for g in getattr(merged, "geoms", [merged])  # fill holes, drop
+             if g.area > 1e6]                                   # fragments smaller than 1 km^2
+    outline = unary_union(parts).simplify(200)                  # clean outline, ~200 m tolerance
+    return shp(transform_geom(src.crs, "EPSG:4326", outline.__geo_interface__))  # to lon/lat
+
+
 def zip_footprint(zip_glob):
     """Return the WGS84 outline of the VALID DATA in a 50m ASO GeoTIFF inside a local zip, or None.
 
@@ -116,25 +137,44 @@ def zip_footprint(zip_glob):
     zips = glob.glob(os.path.join("ASO_data", zip_glob))        # match the product zip
     if not zips:                                                # data not downloaded -> caller falls back
         return None
-    import zipfile, rasterio, numpy as np                       # raster + mask tooling
-    from rasterio.features import shapes                        # vectorize the valid-data mask
-    from rasterio.warp import transform_geom                    # UTM -> WGS84 geometry
-    from shapely.geometry import shape as shp                   # GeoJSON -> shapely
-    from shapely.ops import unary_union                         # merge mask pieces
-    from shapely.geometry import Polygon as Poly                # rebuild parts without holes
+    import zipfile, rasterio                                    # raster + mask tooling
     names = zipfile.ZipFile(zips[0]).namelist()                 # zip contents
     tifs = [n for n in names if n.lower().endswith(".tif") and "swe" in n.lower() and "50m" in n.lower()] \
         or [n for n in names if n.endswith(".tif")]             # the 50m SWE tif (true coverage), else any tif
     with rasterio.open(f"/vsizip/{zips[0]}/{tifs[0]}") as src:  # open without extracting
-        band = src.read(1)                                      # pixel values (to catch NaN nodata)
-        mask = src.read_masks(1) > 0                            # True where real data exists
-        if np.issubdtype(band.dtype, np.floating):              # NaN nodata is missed by read_masks
+        return _valid_data_outline(src, src.read(1))
+
+
+def local_footprint(rel_path, exclude_zero=False, max_dim=3000):
+    """Return the WGS84 outline of valid data in a local raster (downsampled for speed), or None."""
+    import rasterio                                             # raster tooling
+    from rasterio.enums import Resampling                       # decimated-read resampling
+    path = os.path.join("ASO_data", rel_path)                   # local archived product
+    if not os.path.exists(path):                                # not archived locally -> caller falls back
+        return None
+    with rasterio.open(path) as src:                            # open the full-res product
+        h, w = src.height, src.width                            # native dimensions
+        scale = max(1, max(h, w) // max_dim)                    # decimation factor for large rasters
+        nh, nw = h // scale, w // scale                         # downsampled dimensions
+        band = src.read(1, out_shape=(nh, nw), resampling=Resampling.nearest)  # decimated read
+        transform = src.transform * src.transform.scale(w / nw, h / nh)  # matching transform
+        import numpy as np                                      # mask arithmetic (decimated read has no src.read_masks)
+        from rasterio.features import shapes
+        from rasterio.warp import transform_geom
+        from shapely.geometry import shape as shp, Polygon as Poly
+        from shapely.ops import unary_union
+        mask = np.ones(band.shape, bool)                        # start from all-valid, then exclude fill values
+        if np.issubdtype(band.dtype, np.floating):               # NaN nodata
             mask &= np.isfinite(band)
-        geoms = [shp(g) for g, v in shapes(mask.astype("uint8"), mask=mask, transform=src.transform) if v]
+        if src.nodata is not None:                              # explicit nodata sentinel (e.g. -9999)
+            mask &= band != src.nodata
+        if exclude_zero:                                        # 0 used as a fill value (DEMs, intensity)
+            mask &= band != 0
+        geoms = [shp(g) for g, v in shapes(mask.astype("uint8"), mask=mask, transform=transform) if v]
         merged = unary_union(geoms)                             # merge mask pieces
         parts = [Poly(g.exterior) for g in getattr(merged, "geoms", [merged])  # fill holes, drop
-                 if g.area > 1e6]                               # fragments smaller than 1 km^2
-        outline = unary_union(parts).simplify(200)              # clean outline, ~200 m tolerance
+                 if g.area > 1e6]                                # fragments smaller than 1 km^2
+        outline = unary_union(parts).simplify(200)               # clean outline, ~200 m tolerance
         return shp(transform_geom(src.crs, "EPSG:4326", outline.__geo_interface__))  # to lon/lat
 
 
@@ -144,19 +184,26 @@ aso_poly = {s: poly_from_entry(e) for sn in ["ASO_50M_SWE"] for e in lidar_raw[s
             for s in [next((c for c in LIDAR_SITES if c in (e.get("producer_granule_id") or "")), "?")]}
 rcew = box(-116.87, 43.03, -116.63, 43.27)                      # approximate Reynolds Creek watershed box
 ub14 = zip_footprint("*Uncompahgre*2014Mar20*.zip")             # true 2014 Uncompahgre coverage (Senator Beck area)
-sbb = ub14 if ub14 is not None else box(-107.9, 37.85, -107.55, 38.1)  # proxy footprint for SBB 2017
+
+# Senator Beck / Uncompahgre lidar the user located locally and archived to ASO_data/SenatorBeck_local/
+sb17 = local_footprint("SenatorBeck_local/USCOSB20170216_SUPERsnow_depth_50p0m_agg.tif")  # real SnowEx17 snow-on flight
+ub_dtm14_local = local_footprint("SenatorBeck_local/Uncompaghre_20140910_bareDEM_3p0m.tif")  # higher-res snow-off DTM
+sb_dtm16_local = local_footprint("SenatorBeck_local/USCOSB20160926f1a1_dem_vf_3p0m_agg.tif", exclude_zero=True)
+ub_int15 = local_footprint("SenatorBeck_local/USCOUB20150429f1a1_int_vf.tif", exclude_zero=True, max_dim=2000)
+ub_int16 = local_footprint("SenatorBeck_local/USCOUB20160604f1a1_int_vf", exclude_zero=True, max_dim=2000)
+
 MANUAL = [("USCOGM", "2017-02-08", None, gm_poly, "ASO SnowEx17"),
           ("USCOGM", "2017-02-16", None, gm_poly, "ASO SnowEx17"),
           ("USCOGM", "2017-02-20", None, gm_poly, "ASO SnowEx17 (ASO_3M_SD granule)"),
           ("USCOGM", "2017-02-21", None, gm_poly, "ASO SnowEx17 (ASO_3M_SD granule)"),
           ("USCOGM", "2017-02-25", None, gm_poly, "ASO SnowEx17"),
-          ("USCOSB", "2017-02-08", None, sbb, "ASO SnowEx17 Senator Beck/Red Mtn Pass; product not in NSIDC/ASO archives, footprint proxied from 2014 Uncompahgre flight"),
           ("USCOGM", "2020-02-01", "*GrandMesa*2020Feb1-2*.zip", gm_poly, "ASO SnowEx20 (flown Feb 1-2)"),
           ("USCOGM", "2020-02-13", "*GrandMesa*2020Feb13*.zip", gm_poly, "ASO SnowEx20"),
           ("USCOCB", "2020-02-14", "*EastRiver*2020Feb14-20*.zip", aso_poly["USCOCB"], "ASO SnowEx20 (East River, flown Feb 14-20)"),
           ("USCOGT", "2020-02-20", "*TaylorRiver*2020Feb20*.zip", aso_poly["USCOGT"], "ASO SnowEx20"),
           ("USIDRC", "2020-02-18", "*Reynolds*2020Feb18-19*.zip", rcew, "ASO SnowEx20 (Reynolds Creek, flown Feb 18-19)"),
-          ("USCOUB", "2015-04-30", "*Uncompahgre*2015Apr30*.zip", aso_poly.get("USCOUB"), "ASO Uncompahgre (not in CMR)"),
+          ("USCOUB", "2015-04-30", "*Uncompahgre*2015Apr30*.zip", aso_poly.get("USCOUB"),
+           "ASO Uncompahgre (not in CMR); local copies archived (UB20150430_SUPERsnow_depth/SUPERswe)"),
           ("USCOAN", "2021-04-19", "*Animas*2021Apr19*.zip", None, "ASO Animas (not in CMR)"),
           ("USCOCJ", "2021-04-20", "*Conejos*2021Apr20*.zip", None, "ASO Conejos (not in CMR; flown Apr 20-21)"),
           ("USCODL", "2021-04-20", "*Dolores*2021Apr20*.zip", None, "ASO Dolores (not in CMR; flown Apr 20-21)")]
@@ -165,12 +212,30 @@ MANUAL = [(s, d, p if p is not None else f,                     # real footprint
            n + ("" if p is not None else "; approx footprint")) for s, d, p, f, n in MANUAL]
 if ub14 is not None:                                            # replace the approximate Senator Beck box
     acqs[("ASO_50M_SWE", "USCOUB", "2014-03-20")] = {"poly": ub14, "note": "footprint from local product (CMR metadata corrupt)"}
+if ub_dtm14_local is not None:                                  # higher-precision local 3m bare-earth DTM
+    acqs[("ASO_3M_PCDTM", "USCOUB", "2014-09-10")] = {"poly": ub_dtm14_local,
+        "note": "snow-off DTM (bare-earth reference surface); footprint from local 3m product"}
+if sb_dtm16_local is not None:                                  # higher-precision local 3m bare-earth DTM
+    acqs[("ASO_3M_PCDTM", "USCOSB", "2016-09-26")] = {"poly": sb_dtm16_local,
+        "note": "snow-off DTM (bare-earth reference surface); footprint from local 3m product "
+                "(local archive also has 1.5m DSM: USCOSB20160926f1a1_dsm_1p5m_vf)"}
 LIDAR_SITES["USCOGM"] = ("Grand Mesa", "CO")                    # add codes used only by manual entries
 LIDAR_SITES["USIDRC"] = ("Reynolds Creek", "ID")
 LIDAR_SITES["USCOAN"] = ("Animas Basin", "CO")
 LIDAR_SITES["USCODL"] = ("Dolores Basin", "CO")
 for site, date, poly, note in MANUAL:                           # add manual flights
     if poly is not None:                                        # skip entries with no footprint source at all
+        acqs[("ASO_SnowEx", site, date)] = {"poly": poly, "note": note}
+
+# entries with a precise, directly-computed local footprint -- never gets the "approx footprint" suffix
+MANUAL_PRECISE = [("USCOSB", "2017-02-16", sb17, "ASO SnowEx17 Senator Beck/Red Mtn Pass, snow-on; local archive "
+                    "(USCOSB20170216_SUPERsnow_depth[.tif] + 50m agg); not in NSIDC/ASO public archives"),
+                   ("USCOUB", "2015-04-29", ub_int15, "ASO Uncompahgre intensity-only survey, day before the "
+                    "snow-depth flight; local archive (USCOUB20150429f1a1_int_vf/mxi_vf); no snow-depth product"),
+                   ("USCOUB", "2016-06-04", ub_int16, "ASO Uncompahgre intensity-only survey, summer/off-season; "
+                    "local archive (USCOUB20160604f1a1_int_vf/mxi_vf); no snow-depth product")]
+for site, date, poly, note in MANUAL_PRECISE:                   # add precise local-footprint flights
+    if poly is not None:
         acqs[("ASO_SnowEx", site, date)] = {"poly": poly, "note": note}
 
 uav = {}                                                        # UAVSAR (campaign, line_id) -> shapely polygon
