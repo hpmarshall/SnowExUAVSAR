@@ -19,7 +19,13 @@ COLLECTIONS = {"ASO_50M_SWE": "ASO lidar (NSIDC 2013-19)",
                "SNEX20_QSI_SD": "QSI lidar 0.5m/3m (SNEX20_QSI_SD[_3m])",
                "SNEX20_GM_Lidar": "QSI lidar Grand Mesa IOP (SNEX20_GM_Lidar)",
                "SNEX21_PS_DSM": "Prairie Station UAV-lidar (SNEX21_PS_DSM)",
-               "SNEX_MCS_Lidar": "Mores Creek Summit lidar (SNEX_MCS_Lidar)"}
+               "SNEX_MCS_Lidar": "Mores Creek Summit lidar (SNEX_MCS_Lidar)",
+               "ASO_3M_PCDTM": "ASO snow-off DTM (bare-earth reference, ASO_3M_PCDTM)"}
+
+# ASO_3M_PCDTM is mostly late-summer bare-earth surveys across many basins; we only want
+# the Uncompahgre/Senator Beck ones (as reference surfaces for those UAVSAR-overlapping sites),
+# and they fall outside the Jan-Apr snow season so they bypass the month filter below.
+DTM_SITES_OF_INTEREST = {"USCOUB", "USCOSB"}
 
 # site/basin code -> (name, state) for codes appearing in granule filenames
 LIDAR_SITES = {"USIDMC": ("Mores Creek Summit", "ID"), "USIDBS": ("Banner Summit", "ID"),
@@ -27,6 +33,7 @@ LIDAR_SITES = {"USIDMC": ("Mores Creek Summit", "ID"), "USIDBS": ("Banner Summit
                "USCOCP": ("Cameron Pass", "CO"), "USUTLC": ("Little Cottonwood Canyon", "UT"),
                "USCATB": ("Tuolumne Basin", "CA"), "USCAMB": ("Merced Basin", "CA"),
                "USCASJ": ("San Joaquin Basin", "CA"), "USCOUB": ("Uncompahgre Basin", "CO"),
+               "USCOSB": ("Senator Beck Basin", "CO"),
                "USCOCB": ("Crested Butte / East River", "CO"), "USCOGE": ("Gunnison East / East River", "CO"),
                "USCOGT": ("Gunnison Taylor", "CO"), "USCORG": ("Rio Grande", "CO"),
                "USCOCJ": ("Conejos", "CO"), "USCOBR": ("Blue River", "CO"),
@@ -77,33 +84,58 @@ for sn, entries in lidar_raw.items():                           # walk each coll
     for e in entries:                                           # each granule
         gid = e.get("producer_granule_id") or e["title"]        # granule filename
         date = e["time_start"][:10]                             # acquisition date (ISO)
-        if int(date[5:7]) not in (1, 2, 3, 4):                  # keep January-April only
-            continue
         site = next((c for c in LIDAR_SITES if c in gid), "?")  # site code from filename
+        if sn == "ASO_3M_PCDTM":                                # bare-earth DTMs: only Uncompahgre/Senator Beck
+            if site not in DTM_SITES_OF_INTEREST:
+                continue
+        elif int(date[5:7]) not in (1, 2, 3, 4):                # all other collections: January-April only
+            continue
         if sn == "SNEX20_GM_Lidar":                             # GM IOP granules carry no site code
             site = "USCOGM"
-        note = "snow-off" if "snowoff" in gid else ""           # flag snow-off DSMs
+        note = "snow-off DTM (bare-earth reference surface)" if sn == "ASO_3M_PCDTM" \
+            else "snow-off" if "snowoff" in gid else ""         # flag snow-off DSMs/DTMs
         if "orthomosaic" in gid:                                # skip non-lidar orthomosaic product
             continue
         poly = poly_from_entry(e)                               # granule footprint
-        if "USCOUB" in gid:                                     # CMR bug: USCOUB granule carries a CA polygon
+        if sn == "ASO_50M_SWE" and "USCOUB" in gid:             # CMR bug: this specific granule carries a CA polygon
             poly = box(-107.9, 37.85, -107.55, 38.1)            # approx upper Uncompahgre (Senator Beck area)
             note = "approx footprint (bad CMR metadata)"
+        if "USCORG" in gid and os.path.exists("ASO_data/rg_watershed.json"):  # CMR rect overstates coverage
+            from shapely.geometry import shape as shp_          # watershed boundary -> shapely
+            wshed = shp_(json.load(open("ASO_data/rg_watershed.json"))["features"][0]["geometry"])
+            poly = poly.intersection(wshed)                     # clip to Rio Grande Headwaters HUC8
+            note = "CMR rect clipped to Rio Grande Headwaters watershed (approx)"
         acqs.setdefault((sn, site, date), {"poly": poly, "note": note})  # dedupe resolutions
 
 def zip_footprint(zip_glob):
-    """Return the WGS84 footprint of a snow-depth GeoTIFF inside a downloaded ASO zip, or None."""
+    """Return the WGS84 outline of the VALID DATA in a 50m ASO GeoTIFF inside a local zip, or None.
+
+    Traces the actual lidar coverage (nodata masked out) instead of the mosaic's
+    bounding rectangle, which includes large empty margins."""
     import glob                                                 # find the local zip
     zips = glob.glob(os.path.join("ASO_data", zip_glob))        # match the product zip
     if not zips:                                                # data not downloaded -> caller falls back
         return None
-    import zipfile, rasterio                                    # read tif header inside the zip
-    from rasterio.warp import transform_bounds                  # UTM -> WGS84 bounds
-    tifs = [n for n in zipfile.ZipFile(zips[0]).namelist()      # prefer a 50m snow-depth tif (small)
-            if n.endswith(".tif") and "swe" in n.lower()] or \
-           [n for n in zipfile.ZipFile(zips[0]).namelist() if n.endswith(".tif")]
+    import zipfile, rasterio, numpy as np                       # raster + mask tooling
+    from rasterio.features import shapes                        # vectorize the valid-data mask
+    from rasterio.warp import transform_geom                    # UTM -> WGS84 geometry
+    from shapely.geometry import shape as shp                   # GeoJSON -> shapely
+    from shapely.ops import unary_union                         # merge mask pieces
+    from shapely.geometry import Polygon as Poly                # rebuild parts without holes
+    names = zipfile.ZipFile(zips[0]).namelist()                 # zip contents
+    tifs = [n for n in names if n.lower().endswith(".tif") and "swe" in n.lower() and "50m" in n.lower()] \
+        or [n for n in names if n.endswith(".tif")]             # the 50m SWE tif (true coverage), else any tif
     with rasterio.open(f"/vsizip/{zips[0]}/{tifs[0]}") as src:  # open without extracting
-        return box(*transform_bounds(src.crs, "EPSG:4326", *src.bounds))  # footprint in lon/lat
+        band = src.read(1)                                      # pixel values (to catch NaN nodata)
+        mask = src.read_masks(1) > 0                            # True where real data exists
+        if np.issubdtype(band.dtype, np.floating):              # NaN nodata is missed by read_masks
+            mask &= np.isfinite(band)
+        geoms = [shp(g) for g, v in shapes(mask.astype("uint8"), mask=mask, transform=src.transform) if v]
+        merged = unary_union(geoms)                             # merge mask pieces
+        parts = [Poly(g.exterior) for g in getattr(merged, "geoms", [merged])  # fill holes, drop
+                 if g.area > 1e6]                               # fragments smaller than 1 km^2
+        outline = unary_union(parts).simplify(200)              # clean outline, ~200 m tolerance
+        return shp(transform_geom(src.crs, "EPSG:4326", outline.__geo_interface__))  # to lon/lat
 
 
 # documented ASO SnowEx flights absent from CMR: (site code, date, local zip pattern, fallback poly, note)
@@ -111,21 +143,35 @@ gm_poly = poly_from_entry(lidar_raw["SNEX20_GM_Lidar"][0])      # Grand Mesa foo
 aso_poly = {s: poly_from_entry(e) for sn in ["ASO_50M_SWE"] for e in lidar_raw[sn]  # ASO basin footprints
             for s in [next((c for c in LIDAR_SITES if c in (e.get("producer_granule_id") or "")), "?")]}
 rcew = box(-116.87, 43.03, -116.63, 43.27)                      # approximate Reynolds Creek watershed box
+ub14 = zip_footprint("*Uncompahgre*2014Mar20*.zip")             # true 2014 Uncompahgre coverage (Senator Beck area)
+sbb = ub14 if ub14 is not None else box(-107.9, 37.85, -107.55, 38.1)  # proxy footprint for SBB 2017
 MANUAL = [("USCOGM", "2017-02-08", None, gm_poly, "ASO SnowEx17"),
           ("USCOGM", "2017-02-16", None, gm_poly, "ASO SnowEx17"),
+          ("USCOGM", "2017-02-20", None, gm_poly, "ASO SnowEx17 (ASO_3M_SD granule)"),
+          ("USCOGM", "2017-02-21", None, gm_poly, "ASO SnowEx17 (ASO_3M_SD granule)"),
           ("USCOGM", "2017-02-25", None, gm_poly, "ASO SnowEx17"),
+          ("USCOSB", "2017-02-08", None, sbb, "ASO SnowEx17 Senator Beck/Red Mtn Pass; product not in NSIDC/ASO archives, footprint proxied from 2014 Uncompahgre flight"),
           ("USCOGM", "2020-02-01", "*GrandMesa*2020Feb1-2*.zip", gm_poly, "ASO SnowEx20 (flown Feb 1-2)"),
           ("USCOGM", "2020-02-13", "*GrandMesa*2020Feb13*.zip", gm_poly, "ASO SnowEx20"),
           ("USCOCB", "2020-02-14", "*EastRiver*2020Feb14-20*.zip", aso_poly["USCOCB"], "ASO SnowEx20 (East River, flown Feb 14-20)"),
           ("USCOGT", "2020-02-20", "*TaylorRiver*2020Feb20*.zip", aso_poly["USCOGT"], "ASO SnowEx20"),
-          ("USIDRC", "2020-02-18", "*Reynolds*2020Feb18-19*.zip", rcew, "ASO SnowEx20 (Reynolds Creek, flown Feb 18-19)")]
+          ("USIDRC", "2020-02-18", "*Reynolds*2020Feb18-19*.zip", rcew, "ASO SnowEx20 (Reynolds Creek, flown Feb 18-19)"),
+          ("USCOUB", "2015-04-30", "*Uncompahgre*2015Apr30*.zip", aso_poly.get("USCOUB"), "ASO Uncompahgre (not in CMR)"),
+          ("USCOAN", "2021-04-19", "*Animas*2021Apr19*.zip", None, "ASO Animas (not in CMR)"),
+          ("USCOCJ", "2021-04-20", "*Conejos*2021Apr20*.zip", None, "ASO Conejos (not in CMR; flown Apr 20-21)"),
+          ("USCODL", "2021-04-20", "*Dolores*2021Apr20*.zip", None, "ASO Dolores (not in CMR; flown Apr 20-21)")]
 MANUAL = [(s, d, zip_footprint(z) if z else None, f, n) for s, d, z, f, n in MANUAL]  # try local data first
 MANUAL = [(s, d, p if p is not None else f,                     # real footprint, else fallback
            n + ("" if p is not None else "; approx footprint")) for s, d, p, f, n in MANUAL]
+if ub14 is not None:                                            # replace the approximate Senator Beck box
+    acqs[("ASO_50M_SWE", "USCOUB", "2014-03-20")] = {"poly": ub14, "note": "footprint from local product (CMR metadata corrupt)"}
 LIDAR_SITES["USCOGM"] = ("Grand Mesa", "CO")                    # add codes used only by manual entries
 LIDAR_SITES["USIDRC"] = ("Reynolds Creek", "ID")
-for site, date, poly, note in MANUAL:                           # add manual flights (footprints approximate)
-    acqs[("ASO_SnowEx", site, date)] = {"poly": poly, "note": note}
+LIDAR_SITES["USCOAN"] = ("Animas Basin", "CO")
+LIDAR_SITES["USCODL"] = ("Dolores Basin", "CO")
+for site, date, poly, note in MANUAL:                           # add manual flights
+    if poly is not None:                                        # skip entries with no footprint source at all
+        acqs[("ASO_SnowEx", site, date)] = {"poly": poly, "note": note}
 
 uav = {}                                                        # UAVSAR (campaign, line_id) -> shapely polygon
 for f in load_flights():                                        # walk cached UAVSAR flights
@@ -157,7 +203,11 @@ for code in sorted({r["site"] for r in rows}):                  # one folder per
     name, state = LIDAR_SITES.get(code, (code, "?"))
     kml.append(f'<Folder><name>{name}, {state} (lidar)</name>')
     for r in [r for r in rows if r["site"] == code]:            # each acquisition of this site
-        coords = " ".join(f"{x},{y},0" for x, y in r["poly"].exterior.coords)  # KML coordinate string
+        polys = "".join(                                        # polygon(s) -- footprints may be multi-part
+            f'<Polygon><outerBoundaryIs><LinearRing><coordinates>'
+            f'{" ".join(f"{x},{y},0" for x, y in g.exterior.coords)}'
+            f'</coordinates></LinearRing></outerBoundaryIs></Polygon>'
+            for g in getattr(r["poly"], "geoms", [r["poly"]]))
         extra = " ".join(t for t in [r["note"], r["flag"]] if t)  # optional annotations
         kml.append(                                             # outline-heavy placemark, toggleable
             f'<Placemark><name>{name} {r["date"]}</name>'
@@ -165,8 +215,7 @@ for code in sorted({r["site"] for r in rows}):                  # one folder per
             f'{" | " + extra if extra else ""}</description>'
             f'<Style><LineStyle><color>ffff00ff</color><width>3</width></LineStyle>'
             f'<PolyStyle><color>2dff00ff</color></PolyStyle></Style>'
-            f'<Polygon><outerBoundaryIs><LinearRing><coordinates>{coords}</coordinates>'
-            f'</LinearRing></outerBoundaryIs></Polygon></Placemark>')
+            f'<MultiGeometry>{polys}</MultiGeometry></Placemark>')
     kml.append('</Folder>')                                     # close site folder
 kml.append('</Document></kml>')                                 # close document
 open("snowex_lidar.kml", "w").write("\n".join(kml))             # write the KML
