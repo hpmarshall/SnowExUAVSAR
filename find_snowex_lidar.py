@@ -100,9 +100,9 @@ for sn, entries in lidar_raw.items():                           # walk each coll
         if sn == "ASO_50M_SWE" and "USCOUB" in gid:             # CMR bug: this specific granule carries a CA polygon
             poly = box(-107.9, 37.85, -107.55, 38.1)            # approx upper Uncompahgre (Senator Beck area)
             note = "approx footprint (bad CMR metadata)"
-        if "USCORG" in gid and os.path.exists("ASO_data/rg_watershed.json"):  # CMR rect overstates coverage
+        if "USCORG" in gid and os.path.exists("LIDAR/rg_watershed.json"):  # CMR rect overstates coverage
             from shapely.geometry import shape as shp_          # watershed boundary -> shapely
-            wshed = shp_(json.load(open("ASO_data/rg_watershed.json"))["features"][0]["geometry"])
+            wshed = shp_(json.load(open("LIDAR/rg_watershed.json"))["features"][0]["geometry"])
             poly = poly.intersection(wshed)                     # clip to Rio Grande Headwaters HUC8
             note = "CMR rect clipped to Rio Grande Headwaters watershed (approx)"
         acqs.setdefault((sn, site, date), {"poly": poly, "note": note})  # dedupe resolutions
@@ -134,7 +134,7 @@ def zip_footprint(zip_glob):
     Traces the actual lidar coverage (nodata masked out) instead of the mosaic's
     bounding rectangle, which includes large empty margins."""
     import glob                                                 # find the local zip
-    zips = glob.glob(os.path.join("ASO_data", zip_glob))        # match the product zip
+    zips = glob.glob(os.path.join("LIDAR", zip_glob))           # match the product zip
     if not zips:                                                # data not downloaded -> caller falls back
         return None
     import zipfile, rasterio                                    # raster + mask tooling
@@ -149,7 +149,7 @@ def local_footprint(rel_path, exclude_zero=False, max_dim=3000):
     """Return the WGS84 outline of valid data in a local raster (downsampled for speed), or None."""
     import rasterio                                             # raster tooling
     from rasterio.enums import Resampling                       # decimated-read resampling
-    path = os.path.join("ASO_data", rel_path)                   # local archived product
+    path = os.path.join("LIDAR", rel_path)                      # local archived product
     if not os.path.exists(path):                                # not archived locally -> caller falls back
         return None
     with rasterio.open(path) as src:                            # open the full-res product
@@ -185,7 +185,7 @@ aso_poly = {s: poly_from_entry(e) for sn in ["ASO_50M_SWE"] for e in lidar_raw[s
 rcew = box(-116.87, 43.03, -116.63, 43.27)                      # approximate Reynolds Creek watershed box
 ub14 = zip_footprint("*Uncompahgre*2014Mar20*.zip")             # true 2014 Uncompahgre coverage (Senator Beck area)
 
-# Senator Beck / Uncompahgre lidar the user located locally and archived to ASO_data/SenatorBeck_local/
+# Senator Beck / Uncompahgre lidar the user located locally and archived to LIDAR/SenatorBeck_local/
 sb17 = local_footprint("SenatorBeck_local/USCOSB20170216_SUPERsnow_depth_50p0m_agg.tif")  # real SnowEx17 snow-on flight
 ub_dtm14_local = local_footprint("SenatorBeck_local/Uncompaghre_20140910_bareDEM_3p0m.tif")  # higher-res snow-off DTM
 sb_dtm16_local = local_footprint("SenatorBeck_local/USCOSB20160926f1a1_dem_vf_3p0m_agg.tif", exclude_zero=True)

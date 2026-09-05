@@ -1,5 +1,5 @@
 # large lidar/radar data files -- keep the repo code + tables only
-ASO_data/
+LIDAR/
 *.zip
 *.tif
 *.tiff

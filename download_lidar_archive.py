@@ -13,7 +13,7 @@ import requests                # streaming HTTP downloads
 import pandas as pd            # read the lidar catalog
 import earthaccess             # NSIDC/CMR authenticated downloads
 
-ROOT = "ASO_data"                                               # all lidar data lives here (git-ignored)
+ROOT = "LIDAR"                                                  # all lidar data lives here (git-ignored)
 CMR_ROOT = os.path.join(ROOT, "CMR")                             # NSIDC/CMR-hosted granules, by collection
 BUCKET_ROOT = os.path.join(ROOT, "ASO_bucket")                   # public ASO S3 zips, by campaign
 
