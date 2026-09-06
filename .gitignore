@@ -1,5 +1,9 @@
 # large lidar/radar data files -- keep the repo code + tables only
 LIDAR/
+ZARR/
+UAVSAR_INSAR/
+UAVSAR_LKV/
+ATM_DELAY/
 *.zip
 *.tif
 *.tiff
@@ -10,3 +14,4 @@ __pycache__/
 asf_uavsar_cache_*.json
 cmr_lidar_cache.json
 download_lidar_archive.log
+build_mcs_datacube.log
