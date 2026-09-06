@@ -18,3 +18,4 @@ build_mcs_datacube.log
 export_mcs_gui_nc.log
 gui_test_png/
 mcs_gui_test.log
+reingest_pair.log
