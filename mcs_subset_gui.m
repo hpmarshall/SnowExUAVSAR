@@ -102,9 +102,10 @@ app.cb = struct('pair', @onPair, 'sar', @(varargin) refreshSAR(), ...
         maps = containers.Map({'dswe', 'coherence', 'unwrapped_phase', 'atm_delay_diff'}, ...
             {cmapDiverging(), cmapSeq(), cmapDiverging(), cmapDiverging()});
         letter = regexp(S.rankNote{pi}, 'Pair \w', 'match', 'once');
+        % UAVSAR products auto-span the 5-95% quantiles of the displayed slice
         show(S.axSAR, img, sprintf('%s: %s%s — %s → %s', letter, names(prod), polTxt, ...
             S.pairD1{pi}, S.pairD2{pi}), maps(prod), ...
-            ismember(prod, {'dswe', 'unwrapped_phase', 'atm_delay_diff'}));
+            ismember(prod, {'dswe', 'unwrapped_phase', 'atm_delay_diff'}), [5 95]);
     end
 
     function refreshLid()
@@ -151,9 +152,10 @@ app.cb = struct('pair', @onPair, 'sar', @(varargin) refreshSAR(), ...
                              'img', [], 'signed', false);
     end
 
-    function show(ax, img, titleTxt, cmap, signed)
+    function show(ax, img, titleTxt, cmap, signed, qlims)
         if nargin < 5, signed = false; end
-        u = ax.UserData; u.img = img; u.signed = signed;
+        if nargin < 6, qlims = [2 98]; end                       % default robust range
+        u = ax.UserData; u.img = img; u.signed = signed; u.qlims = qlims;
         if isempty(u.im)
             u.im = imagesc(ax, [S.x(1) S.x(end)], [S.y(1) S.y(end)], img);
             ax.YDir = 'normal'; hold(ax, 'on');
@@ -189,7 +191,9 @@ app.cb = struct('pair', @onPair, 'sar', @(varargin) refreshSAR(), ...
         v = u.img(isfinite(u.img));
         if isempty(v), return; end
         if numel(v) > 2e5, v = v(1:ceil(numel(v) / 2e5):end); end
-        lims = double(prctile(v, [2 98]));
+        q = [2 98];
+        if isfield(u, 'qlims') && ~isempty(u.qlims), q = u.qlims; end
+        lims = double(prctile(v, q));
         full = double([min(v) max(v)]);
         if full(1) >= full(2), full = full(1) + [-0.5 0.5]; end
         if lims(1) >= lims(2), lims = full; end
