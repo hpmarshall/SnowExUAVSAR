@@ -28,11 +28,11 @@ for ln = app.line'                                               % both flight h
     % ---- UAVSAR panel: every product on first/middle/last pair, two pols ----
     pairs = cell2mat(app.ddSARPair.ItemsData);
     testPairs = unique([pairs(1) pairs(ceil(end / 2)) pairs(end)]);
-    for prod = {'coherence', 'unwrapped_phase', 'wrapped_angle', 'wrapped_amplitude', 'atm_delay_diff'}
+    for prod = {'coherence', 'unwrapped_phase', 'wrapped_angle', 'wrapped_amplitude', 'atm_delay_diff', 'dswe'}
         app.ddSARProd.Value = prod{1};
         for pi = testPairs
             app.ddSARPair.Value = pi;
-            pols = ternary(strcmp(prod{1}, 'atm_delay_diff'), 1, [1 4]); % HH + VV where pol applies
+            pols = ternary(strcmp(prod{1}, 'atm_delay_diff'), 1, [1 4]); % HH + VV where pol applies (dswe has pols)
             for po = pols
                 app.ddSARPol.Value = po; app.cb.sar();
                 n = n + 1; snap(sprintf('%02d_%s_sar_%s_p%02d_%s', n, char(ln), ...
