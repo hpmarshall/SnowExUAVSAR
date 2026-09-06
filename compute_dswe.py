@@ -18,6 +18,12 @@ so SNOTEL is a reference here, NOT an independent validation.
 
 Mask: coherence < 0.35 or cos(LIA) <= 0.05 -> NaN.
 
+Ramp removal (DERAMP_PAIRS): pairs with a residual long-wavelength ramp (aircraft
+motion / baseline residuals; pair 8's pre-deramp SNOTEL anchor offset was +187 mm) get
+phi = a + bx + cy + d*z(DEM) fit at 90 m, with ONLY the planar a+bx+cy removed -- the
+elevation-correlated term is kept, since orographic accumulation is itself
+elevation-correlated and must not be deleted (its magnitude is logged).
+
 Outputs: 'dswe' variable appended to ZARR/mores_creek_summit.zarr and ZARR/mcs_gui.nc;
 per-pair diagnostics in dswe_retrieval_log.csv (committed).
 
@@ -42,6 +48,21 @@ COH_MIN = 0.35                 # coherence mask threshold
 SNOTEL_LATLON = (43.93200, -115.66588)                            # 637:ID:SNTL
 WIN = 15                       # anchor window half-width: 30x30 cells = 90 m
 SIGN_CHECK_PAIRS = [8, 10, 11]                                    # high-coherence storm pairs
+DERAMP_PAIRS = [8]             # pairs with a known residual ramp (see header)
+
+
+def fit_ramp(phi, dem, x, y, k=30):
+    """Fit phi = a + b*x + c*y + d*z at 90 m; return the full-res PLANE a+bx+cy (to
+    remove) and the coefficients (d*z is deliberately kept in the data)."""
+    X, Y = np.meshgrid(x - x.mean(), y - y.mean())                # centered coords: well-conditioned fit
+    p90, z90 = block_mean(phi, k), block_mean(dem, k)
+    x90, y90 = block_mean(X, k), block_mean(Y, k)
+    m = np.isfinite(p90) & np.isfinite(z90)
+    G = np.column_stack([np.ones(m.sum()), x90[m], y90[m], z90[m] - np.nanmean(z90[m])])
+    a, b, c, d = np.linalg.lstsq(G, p90[m], rcond=None)[0]
+    plane = (a + b * X + c * Y).astype("float32")                 # planar part only, full resolution
+    return plane, dict(ramp_x_rad_per_km=1000 * b, ramp_y_rad_per_km=1000 * c,
+                       elev_term_rad_per_100m=100 * d)
 
 if __name__ == "__main__":
     ds = xr.open_zarr(ZARR_PATH)
@@ -73,6 +94,8 @@ if __name__ == "__main__":
             v.long_name = init["dswe"].attrs["long_name"]
 
     sd2021_90 = block_mean(ds["sd"].sel(sd_time="2021-03-15").squeeze().values)  # for the sign check
+    dem = ds["dtm"].sel(lidar_time="2023-02-09").squeeze().values  # elevation term in the ramp fit
+    xs, ys = ds["x"].values, ds["y"].values
     rows, sign_r = [], {}
     for pi in range(ds.sizes["pair"]):
         line = str(ds["line_id"][pi].values)
@@ -98,6 +121,22 @@ if __name__ == "__main__":
                                  finite_frac=0.0, window_n=0))
                 continue
             phi = unw - atm                                       # atmosphere-corrected phase
+            ramp_info = {}
+            if pi in DERAMP_PAIRS:                                # remove planar ramp, keep elevation term
+                plane, ramp_info = fit_ramp(phi, dem, xs, ys)
+                if pol == "HH":                                   # diagnostic figure (before/plane/after)
+                    import matplotlib; matplotlib.use("Agg")
+                    import matplotlib.pyplot as plt
+                    fig, axs = plt.subplots(1, 3, figsize=(13, 4))
+                    for axx, (ttl, arr) in zip(axs, [("before", phi), ("fitted plane", plane),
+                                                      ("after", phi - plane)]):
+                        im = axx.imshow(block_mean(np.where(np.isfinite(phi), arr, np.nan)),
+                                        cmap="RdBu_r", vmin=-8, vmax=8)
+                        axx.set_title(f"pair {pi} HH {ttl} (rad, 90 m)"); axx.axis("off")
+                        fig.colorbar(im, ax=axx, shrink=0.8)
+                    fig.tight_layout(); fig.savefig(f"deramp_pair{pi}.png", dpi=130)
+                    print(f"      deramp: {ramp_info}")
+                phi = phi - plane
             dz = depth_from_phase(phi, lia_rad, density=DENSITY)  # m of snow (Guneriussen-2001)
             dswe = (dz * DENSITY / 1000.0).astype("float32")      # m w.e.
             coh = ds["coherence"][pi, pol_i].values
@@ -120,6 +159,8 @@ if __name__ == "__main__":
                              snotel_dswe_m=round(dswe_sno, 4), snotel_density=rho_sno,
                              anchor_offset_m=round(float(offset), 4) if np.isfinite(offset) else np.nan,
                              anchor_window_m=6 * w,               # window full width in metres
+                             deramped=pi in DERAMP_PAIRS,
+                             **{k2: round(v2, 4) for k2, v2 in ramp_info.items()},
                              finite_frac=round(float(np.isfinite(dswe).mean()), 3), window_n=wn))
             if pi in SIGN_CHECK_PAIRS and pol == "HH":            # empirical sign check vs lidar SD
                 r, n = pearson(sd2021_90, block_mean(dswe))
@@ -139,6 +180,16 @@ if __name__ == "__main__":
     # accumulation -- their near-zero pattern correlation after LIA normalization is a
     # weak-signal outcome, not evidence about the sign.
     assert sign_r[8] > 0.3 and np.mean(list(sign_r.values())) > 0, f"sign convention violated: {sign_r}"
+    # deramp success criteria: removing the plane (constant included) zeroes the scene
+    # level, so the anchor offset should now be ~= the SNOTEL interval dSWE itself (the
+    # absolute signal the anchor restores) -- the residual level at the station beyond
+    # that must be small -- and the storm-pair lidar correlation must be preserved.
+    # (The pre-deramp "+187 mm offset" was mostly SNOTEL's own +173 mm plus the
+    # unwrapper's constant, not pure ramp; the actual fitted tilt was ~0.15 rad/km.)
+    p8 = [r for r in rows if r["pair"] == 8 and r["pol"] == "HH"][0]
+    resid_level = p8["anchor_offset_m"] - p8["snotel_dswe_m"]
+    assert abs(resid_level) < 0.05, f"pair 8 residual level at station: {resid_level:+.3f} m"
+    assert sign_r[8] > 0.5, f"deramp degraded pair 8 lidar corr: {sign_r[8]}"
     log = pd.DataFrame(rows).round({"snotel_density": 0})
     log.to_csv("dswe_retrieval_log.csv", index=False)
     print("sign checks:", {k: round(v, 3) for k, v in sign_r.items()})

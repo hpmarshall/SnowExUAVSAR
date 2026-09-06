@@ -29,3 +29,4 @@ dependencies:
       - uavsar-pytools==0.7.1         # .grd -> GeoTIFF conversion, .ann parsing, incidence angle (AGENTS.md "Tools to use")
       - phase-o-matic==0.1.0          # ERA5 -> atmospheric phase delay
       - cdsapi==0.7.7                 # ERA5 downloads for phase_o_matic (needs ~/.cdsapirc)
+      - snaphu==0.4.1                 # SNAPHU phase unwrapping (unwrap_missing_pairs.py)

@@ -8,7 +8,7 @@ if nargin < 1, outDir = 'gui_test_png'; end                      % where the scr
 if ~isfolder(outDir), mkdir(outDir); end
 
 app = mcs_gui();                                                 % build the app on the default .nc
-snap = @(name) exportapp(app.fig, fullfile(outDir, [name '.png'])); % whole-figure screenshot
+snap = @(name) snapRetry(app.fig, fullfile(outDir, [name '.png'])); % whole-figure screenshot (with retry)
 n = 0;                                                           % screenshot counter
 
 for ln = app.line'                                               % both flight headings
@@ -59,4 +59,16 @@ end
 function out = ternary(cond, a, b)
 % Inline conditional (MATLAB has none).
 if cond, out = a; else, out = b; end
+end
+
+function snapRetry(fig, path)
+% exportapp occasionally fails or captures a stale frame in headless batch runs --
+% flush the render pipeline first, and retry once on failure.
+drawnow;
+try
+    exportapp(fig, path);
+catch
+    pause(2); drawnow;
+    exportapp(fig, path);
+end
 end

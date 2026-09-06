@@ -112,6 +112,7 @@ if __name__ == "__main__":
            "| pair | dates | lidar | type | " + " | ".join(POLS) + " |",
            "|---|---|---|---|---|---|---|---|"]
     cases = [(3, "2021-03-15", "bracketing"), (4, "2021-03-15", "bracketing"),
+             (20, "2020-02-09", "bracketing (custom unwrap)"),
              (19, "2020-02-09", "proxy (adjacent window)"), (18, "2020-02-09", "proxy (adjacent window)")]
     fig, axes = plt.subplots(1, len(cases), figsize=(4.2 * len(cases), 4))
     for ax, (pi, ld, typ) in zip(axes, cases):
@@ -129,9 +130,11 @@ if __name__ == "__main__":
         ax.set_title(f"pair {pi} {d1}->{d2}\n{typ}, r={rs[0]}", fontsize=9)
         ax.grid(alpha=0.3)
     fig.tight_layout(); fig.savefig("dswe_vs_lidar.png", dpi=130)
-    md += ["", "Scatter (HH): dswe_vs_lidar.png. The pair bracketing the 2020 lidar (20,",
-           "2020-01-31->02-13) has no unwrapped phase from ASF, so no dSWE map exists for it;",
-           "pairs 19/18 compare a fixed snapshot against a different window (proxy only).", ""]
+    custom = xr.open_zarr(ZARR_PATH)["unwrapped_phase"].attrs.get("custom_unwrapped_pairs", [])
+    md += ["", "Scatter (HH): dswe_vs_lidar.png. Pair 20 (2020-01-31->02-13) brackets the 2020",
+           "lidar; ASF ships no .unw.grd for it, so its unwrapped phase (and that of pairs",
+           f"{custom}) comes from our SNAPHU pipeline (unwrap_missing_pairs.py).",
+           "Pairs 19/18 compare a fixed snapshot against a different window (proxy only).", ""]
 
     open(OUT_MD, "w").write("\n".join(md) + "\n")
     print(f"wrote {OUT_MD} and dswe_vs_lidar.png")

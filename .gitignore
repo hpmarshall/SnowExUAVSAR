@@ -19,3 +19,5 @@ export_mcs_gui_nc.log
 gui_test_png/
 mcs_gui_test.log
 reingest_pair.log
+unwrap_missing_pairs.log
+step_c_refresh*.log

@@ -131,7 +131,8 @@ if __name__ == "__main__":
             f"| {pi} | {r0.line} | {r0.date1} | {r0.date2} | {r0.baseline_days} | {r0.med_coh_hh:.3f} "
             f"| {r0.n90_unw} | " + " | ".join(fmt(sub.loc[p, 'r_unw_90m']) for p in POLS)
             + " | " + " | ".join(fmtu(sub.loc[p, 'R_wrap_90m']) for p in POLS) + " |")
-    lines_out += ["", "Blank r_unw cells: ASF ships no .unw.grd for that pair (5 pairs).",
+    lines_out += ["", "Pairs 9, 12, 14, 20, 21: ASF ships no .unw.grd; their unwrapped phase comes from",
+                  "our SNAPHU pipeline (unwrap_missing_pairs.py, 5x5 looks, smooth cost).",
                   "n (90m): jointly-finite 90 m cells in the unwrapped comparison (HH)."]
     open("phase_sd_correlations.md", "w").write("\n".join(lines_out) + "\n")
     print("wrote phase_sd_correlations.md")
