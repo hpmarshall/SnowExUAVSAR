@@ -37,6 +37,9 @@ GATE_SNOTEL_M = 0.010          # >= +10 mm SNOTEL dSWE: interval must contain sn
 GATE_N90 = 500                 # >= 500 valid 90 m cells: statistical support
 CUSTOM_UNWRAPPED = [9, 12, 14, 20, 21]                            # SNAPHU pipeline provenance
 ZERO_CHANGE_EXAMPLE = 4        # user-requested extra: minimal-dSWE bracketing pair
+# letter labels for the selected pairs, used consistently across the SNOTEL figure,
+# the report tables, the subset NetCDF's rank_note, and the subset GUI
+PAIR_LETTERS = {8: "A", 2: "B", 1: "C", 5: "D", 6: "E", 4: "F"}
 
 if __name__ == "__main__":
     ds = xr.open_zarr(ZARR_PATH)

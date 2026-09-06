@@ -1,6 +1,7 @@
-"""Fetch Mores Creek Summit SNOTEL (637:ID:SNTL) daily SWE and snow depth.
+"""Fetch Mores Creek Summit SNOTEL (637:ID:SNTL) daily SWE, snow depth and air temperature.
 
-Pulls WTEQ (SWE, inches) and SNWD (depth, inches) from the NRCS AWDB REST API for
+Pulls WTEQ (SWE, inches), SNWD (depth, inches) and TAVG (daily mean air
+temperature, degF) from the NRCS AWDB REST API for
 water years 2020 and 2021, converts to metric, and writes snotel_mcs_swe.csv
 (committed -- it is small and the retrieval + plots depend on it).
 
@@ -20,7 +21,7 @@ OUT = "snotel_mcs_swe.csv"
 IN2MM = 25.4                                                     # inches -> mm
 
 if __name__ == "__main__":
-    r = requests.get(AWDB, params={"stationTriplets": TRIPLET, "elements": "WTEQ,SNWD",
+    r = requests.get(AWDB, params={"stationTriplets": TRIPLET, "elements": "WTEQ,SNWD,TAVG",
                                     "beginDate": BEGIN, "endDate": END, "duration": "DAILY"},
                      headers={"User-Agent": "SnowExUAVSAR-research/1.0"}, timeout=60)
     r.raise_for_status()
@@ -31,7 +32,8 @@ if __name__ == "__main__":
         series[code] = pd.Series(vals, dtype=float)
 
     df = pd.DataFrame({"swe_mm": series["WTEQ"] * IN2MM,         # SWE inches -> mm
-                       "depth_mm": series["SNWD"] * IN2MM})      # depth inches -> mm
+                       "depth_mm": series["SNWD"] * IN2MM,       # depth inches -> mm
+                       "tavg_c": (series["TAVG"] - 32) * 5 / 9})  # degF -> degC
     df.index.name = "date"
     df = df.round(1).sort_index()
     df.to_csv(OUT)

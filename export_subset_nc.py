@@ -23,7 +23,8 @@ import xarray as xr
 ZARR_PATH = "ZARR/mores_creek_summit.zarr"
 OUT = "ZARR/mcs_top_pairs_subset.nc"
 PAIRS = [8, 2, 1, 5, 6, 4]                                       # rank order, then the bonus example
-RANK_NOTE = ["rank 1", "rank 2", "rank 3", "rank 4", "rank 5", "zero-change example"]
+RANK_NOTE = ["Pair A (rank 1)", "Pair B (rank 2)", "Pair C (rank 3)", "Pair D (rank 4)",
+             "Pair E (rank 5)", "Pair F (zero-change example)"]   # letters shared with figure/tables
 SD_DATES = ["2020-02-09", "2021-03-15"]                          # the two MCS QSI surveys
 DEM_DATE = "2023-02-09"
 
@@ -58,7 +59,7 @@ if __name__ == "__main__":
         source_zarr=ZARR_PATH,
         pair_selection="ranked by dSWE-vs-lidar pattern correlation (rank_dswe_pairs.py); "
                        "pair index order in this file: " + ", ".join(map(str, PAIRS)) +
-                       " (indices in the master Zarr); see rank_note coordinate",
+                       " (indices in the master Zarr); letters A-F in rank_note match the report figure/tables",
         dswe_units="m w.e.; SWE change date1 -> date2",
         dswe_method="Guneriussen-2001 inversion of atmosphere-corrected unwrapped phase; "
                     "density 250 kg/m3; local incidence angle from JPL look vectors (lia); "

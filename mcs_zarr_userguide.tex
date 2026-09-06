@@ -94,7 +94,7 @@ what the snow modeling team needs, on the same 3\,m grid:
 \begin{itemize}
 \item \textbf{pair} dimension of 6, in rank order --- master-Zarr pairs 8, 2, 1, 5, 6
       (ranks 1--5) and pair 4 (zero-change example); the \texttt{rank\_note} coordinate
-      labels each. All six carry original ASF unwrapped phase (none needed custom
+      labels each with the letters A--F used in the summary report's figure and tables. All six carry original ASF unwrapped phase (none needed custom
       unwrapping).
 \item Per pair: \texttt{dswe} (4 pols), \texttt{coherence} (4 pols, for quality
       screening), \texttt{unwrapped\_phase} (4 pols) and \texttt{atm\_delay\_diff}
@@ -106,6 +106,9 @@ what the snow modeling team needs, on the same 3\,m grid:
 
 MATLAB: \verb|ncread('mcs_top_pairs_subset.nc','dswe',[1 1 1 1],[Inf Inf 1 1])| reads the
 first pair's HH map (MATLAB returns dimensions reversed: $x, y, \mathrm{pol},
-\mathrm{pair}$). Python: \verb|xr.open_dataset(...)|.
+\mathrm{pair}$). Python: \verb|xr.open_dataset(...)|. For interactive browsing, the
+delivered \texttt{mcs\_subset\_gui.m} (with \texttt{mcs\_annotations.json} beside it
+and this file at \texttt{ZARR/mcs\_top\_pairs\_subset.nc} or in the working directory)
+opens a four-panel linked viewer with pair/polarization/product dropdowns.
 
 \end{document}

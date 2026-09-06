@@ -25,19 +25,23 @@ SNOTEL, and selects the pairs most useful for defining the sub-km precipitation 
 Figure~\ref{fig:snotel} places every UAVSAR flight and both QSI lidar surveys on the
 SNOTEL SWE record.
 
-\begin{figure}[h]
+\begin{figure}[!tb]
 \centering
 \includegraphics[width=\textwidth]{snotel_swe_flights.png}
-\caption{Mores Creek Summit SNOTEL (637:ID:SNTL) daily SWE for the two campaign winters.
-Vertical lines: UAVSAR flights (line 23205 solid red, line 05208 dotted orange; the two
-lines flew the same days in 2021). Dashed green: QSI lidar snow-depth surveys
-(2020-02-09 and 2021-03-15).}
+\caption{Mores Creek Summit SNOTEL (637:ID:SNTL) daily SWE (left axis) and mean air
+temperature (right axis, purple, dashed gray 0\,$^\circ$C line) for the two campaign
+winters. Vertical lines: UAVSAR flights (line 23205 solid red, line 05208 dotted orange;
+the two lines flew the same days in 2021). Dashed green: QSI lidar snow-depth surveys
+(2020-02-09 and 2021-03-15). Double-headed arrows (bottom panel): the intervals of the
+selected pairs A--F of Table~\ref{tab:top}, each labeled with its polarization-mean
+correlation against the season-matched lidar; Pair F (gray) is the zero-change example.}
 \label{fig:snotel}
 \end{figure}
 
 \section{Recommended pairs}
 
-Table~\ref{tab:top} lists the five ranked pairs plus one additional example. The rank
+Table~\ref{tab:top} lists the five ranked pairs (labeled A--E, shown as interval arrows
+in Figure~\ref{fig:snotel}) plus one additional example (Pair F). The rank
 criterion is the mean (over four polarizations) Pearson correlation at 90\,m between the
 pair's $\Delta$SWE map and the season-matched lidar snow depth, restricted to pairs whose
 interval contains real snowfall (SNOTEL $\Delta$SWE $\ge$ +10\,mm) with adequate valid
@@ -55,11 +59,11 @@ depth at 90\,m; cross-pol is the mean inter-polarization correlation of the retr
 \resizebox{\textwidth}{!}{\input{tex_fragments/rank_top}}
 \end{table}
 
-Two features strengthen the top choices: pair 8 correlates nearly equally with the 2020
-lidar ($+0.650$) and the 2021 lidar ($+0.637$), evidence that the accumulation pattern it
-captures is the persistent, terrain-controlled one a model precipitation field should
-inherit; and pairs 5/6 sample the same early-March snowfall from opposite headings,
-giving a built-in cross-view consistency check.
+Two features strengthen the top choices: Pair A (pair 8) correlates nearly equally with
+the 2020 lidar ($+0.650$) and the 2021 lidar ($+0.637$), evidence that the accumulation
+pattern it captures is the persistent, terrain-controlled one a model precipitation field
+should inherit; and Pairs D/E (pairs 5/6) sample the same early-March snowfall from
+opposite headings, giving a built-in cross-view consistency check.
 
 \section{Processing steps}
 
@@ -124,12 +128,16 @@ pairs reach $r = +0.45$ to $+0.65$.
 
 \begin{itemize}
 \item \texttt{mcs\_top\_pairs\_subset.nc} (1.2\,GB NetCDF4): the six pairs of
-      Table~\ref{tab:top} in rank order (\texttt{rank\_note} coordinate), with
+      Table~\ref{tab:top} in rank order (\texttt{rank\_note} coordinate carrying the
+      A--F letters), with
       $\Delta$SWE, coherence, unwrapped phase and atmospheric correction per pair, plus
       the two QSI snow-depth surveys, the DEM, and both lines' incidence angle. Format
       details in the companion user guide.
 \item \texttt{mcs\_zarr\_userguide.pdf}: complete format specification of the master
       datacube and of the subset file.
+\item \texttt{mcs\_subset\_gui.m} (+ \texttt{mcs\_annotations.json}): standalone
+      MATLAB viewer for the subset file --- pair (A--F), polarization, product and
+      lidar-date dropdowns over four linked panels.
 \end{itemize}
 
 \appendix

@@ -24,6 +24,7 @@ ZARR_PATH = "ZARR/mores_creek_summit.zarr"
 FRAG = "tex_fragments"
 TOP_PAIRS = [8, 2, 1, 5, 6]
 ZERO_PAIR = 4
+from rank_dswe_pairs import PAIR_LETTERS  # shared letter labels (A-F)
 
 COORD_MEANING = {  # one-line meaning per coordinate variable
     "x": "UTM easting of cell centers (m, EPSG:32611)",
@@ -125,16 +126,16 @@ if __name__ == "__main__":
                          xp=r0.crosspol_mean, custom=bool(r0.custom_unwrap)))
     S = pd.DataFrame(summ).set_index("pair")
 
-    rows = [r"\begin{tabular}{clllrrrr}", r"\hline",
-            r"rank & pair & line & dates & SNOTEL $\Delta$SWE (mm) & $r$ vs lidar & cross-pol & $n_{90}$ \\",
+    rows = [r"\begin{tabular}{cclllrrrr}", r"\hline",
+            r"label & rank & pair & line & dates & SNOTEL $\Delta$SWE (mm) & $r$ vs lidar & cross-pol & $n_{90}$ \\",
             r"\hline"]
     for i, pi in enumerate(TOP_PAIRS, 1):
         r = S.loc[pi]
-        rows.append(f"{i} & {pi} & {r.line:05d} & {r.d1} $\\rightarrow$ {r.d2} & {r.snotel:+.0f} "
+        rows.append(f"\\textbf{{{PAIR_LETTERS[pi]}}} & {i} & {pi} & {r.line:05d} & {r.d1} $\\rightarrow$ {r.d2} & {r.snotel:+.0f} "
                     f"& {r.rm:+.3f} & {r.xp:+.2f} & {r.n90} \\\\")
     r = S.loc[ZERO_PAIR]
     rows.append(r"\hline")
-    rows.append(f"-- & {ZERO_PAIR} & {r.line:05d} & {r.d1} $\\rightarrow$ {r.d2} & {r.snotel:+.0f} "
+    rows.append(f"\\textbf{{{PAIR_LETTERS[ZERO_PAIR]}}} & -- & {ZERO_PAIR} & {r.line:05d} & {r.d1} $\\rightarrow$ {r.d2} & {r.snotel:+.0f} "
                 f"& {r.rm:+.3f} & {r.xp:+.2f} & {r.n90} \\\\")
     rows += [r"\hline", r"\end{tabular}"]
     open(f"{FRAG}/rank_top.tex", "w").write("\n".join(rows) + "\n")
@@ -147,6 +148,7 @@ if __name__ == "__main__":
     rank_of = {pi: i + 1 for i, pi in enumerate(ranked.index)}
     for pi, r in S.iterrows():
         notes = []
+        if pi in PAIR_LETTERS: notes.append(f"\\textbf{{Pair {PAIR_LETTERS[pi]}}}")
         if pi in rank_of: notes.append(f"rank {rank_of[pi]}")
         if pi == ZERO_PAIR: notes.append("zero-change example")
         if r.snotel < 10: notes.append("no snowfall")

@@ -28,3 +28,4 @@ step_c_refresh*.log
 mcs_summary_report.log
 mcs_zarr_userguide.log
 export_subset_nc.log
+mcs_subset_gui_test.log
