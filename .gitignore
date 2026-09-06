@@ -21,3 +21,10 @@ mcs_gui_test.log
 reingest_pair.log
 unwrap_missing_pairs.log
 step_c_refresh*.log
+# LaTeX build artifacts
+*.aux
+*.out
+*_latex.log
+mcs_summary_report.log
+mcs_zarr_userguide.log
+export_subset_nc.log

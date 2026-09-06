@@ -1,0 +1,17 @@
+\begin{tabular}{p{2.6cm}p{3.1cm}p{1.5cm}p{2.0cm}p{5.6cm}}
+\hline
+variable & dims & dtype & chunks & units / source \\
+\hline
+atm\_delay & (flight, y, x) & float64 & (3, 351, 328) & radians; ERA5 delay below aircraft altitude, per flight (compute\_atm\_delay.py) \\
+atm\_delay\_diff & (pair, y, x) & float64 & (3, 351, 328) & radians; per-pair delay difference (date2$-$date1) (compute\_atm\_delay\_diff.py) \\
+chm & (lidar\_time, y, x) & float32 & (1, 512, 512) & m; MCS\_Lidar canopy height (build\_mcs\_datacube.py) \\
+coherence & (pair, pol, y, x) & float32 & (1, 1, 512, 512) & unitless [0,1]; ASF .cor.grd (build\_mcs\_datacube.py) \\
+dsm & (lidar\_time, y, x) & float32 & (1, 512, 512) & m; MCS\_Lidar surface DSM (build\_mcs\_datacube.py) \\
+dswe & (pair, pol, y, x) & float32 & (1, 1, 512, 512) & m w.e.; Guneriussen-2001 inversion, $\rho$=250, SNOTEL-anchored, pair 8 deramped (compute\_dswe.py) \\
+dtm & (lidar\_time, y, x) & float32 & (1, 512, 512) & m; MCS\_Lidar bare-earth DTM (build\_mcs\_datacube.py) \\
+lia & (line, y, x) & float64 & (1, 351, 328) & degrees; JPL .llh/.lkv look vectors + 2023-02-09 DTM (compute\_local\_incidence\_angle.py) \\
+sd & (sd\_time, y, x) & float32 & (1, 512, 512) & m; QSI + MCS\_Lidar snow depth, 0.5\,m block-averaged to 3\,m (build\_mcs\_datacube.py) \\
+unwrapped\_phase & (pair, pol, y, x) & float32 & (1, 1, 512, 512) & radians; ASF .unw.grd; pairs 9/12/14/20/21 SNAPHU-unwrapped in-house (build\_mcs\_datacube.py, unwrap\_missing\_pairs.py) \\
+wrapped\_phase & (pair, pol, y, x) & complex64 & (1, 1, 512, 512) & complex (unitless); ASF INTERFEROMETRY\_GRD, complex-domain regrid (build\_mcs\_datacube.py) \\
+\hline
+\end{tabular}

@@ -1,5 +1,5 @@
 # SnowExUAVSAR
-this repo summarizes the UAVSAR data collected for SnowEx, and starts by building a database for Mores Creek Summit area
+this repo summarizes the UAVSAR data collected for SnowEx, and starts by building a database for Mores Creek Summit area. See README.md for a complete file-by-file index.
 
 ## Tools to use
 Use asf_search for accessing UAVSAR data

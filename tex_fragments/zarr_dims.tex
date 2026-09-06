@@ -1,0 +1,28 @@
+\begin{tabular}{llll}
+\hline
+name & size / dims & dtype & meaning \\
+\hline
+flight (dim) & 20 & -- & unique flight index (line, date) \\
+y (dim) & 2801 & -- & UTM northing of cell centers (m), stored north to south \\
+x (dim) & 2624 & -- & UTM easting of cell centers (m, EPSG:32611) \\
+pair (dim) & 22 & -- & InSAR pair index (order of uavsar\_pair\_manifest\_mcs.json) \\
+lidar\_time (dim) & 13 & -- & MCS\_Lidar acquisition date (DTM/DSM/CHM) \\
+pol (dim) & 4 & -- & polarization (HH, HV, VH, VV) \\
+line (dim) & 2 & -- & UAVSAR flight line id (05208 NE-looking, 23205 SW-looking) \\
+sd\_time (dim) & 15 & -- & snow-depth acquisition date \\
+flight\_date & coord on flight & str(10) & acquisition date of each flight \\
+flight\_line\_id & coord on flight & str(5) & flight line of each flight \\
+heading & coord on pair & int64 & aircraft heading of each pair (deg) \\
+lidar\_time & coord on lidar\_time & datetime & MCS\_Lidar acquisition date (DTM/DSM/CHM) \\
+line & coord on line & str(5) & UAVSAR flight line id (05208 NE-looking, 23205 SW-looking) \\
+line\_id & coord on pair & str(5) & flight line of each pair \\
+pair\_date1 & coord on pair & datetime & pair reference (earlier) acquisition date \\
+pair\_date2 & coord on pair & datetime & pair repeat (later) acquisition date \\
+pol & coord on pol & str(2) & polarization (HH, HV, VH, VV) \\
+sd\_source & coord on sd\_time & str(14) & snow-depth product (SNEX20\_QSI\_SD or SNEX\_MCS\_Lidar) \\
+sd\_time & coord on sd\_time & datetime & snow-depth acquisition date \\
+temporal\_baseline\_days & coord on pair & int32 & days between the pair's acquisitions \\
+x & coord on x & float64 & UTM easting of cell centers (m, EPSG:32611) \\
+y & coord on y & float64 & UTM northing of cell centers (m), stored north to south \\
+\hline
+\end{tabular}
