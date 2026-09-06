@@ -155,6 +155,8 @@ app.cb = struct('pair', @onPair, 'sar', @(varargin) refreshSAR(), ...
     function show(ax, img, titleTxt, cmap, signed, qlims)
         if nargin < 5, signed = false; end
         if nargin < 6, qlims = [2 98]; end                       % default robust range
+        % 'signed' is kept in the API for callers but no longer zero-centers the
+        % clim -- ranges always span the slice's actual robust quantiles
         u = ax.UserData; u.img = img; u.signed = signed; u.qlims = qlims;
         if isempty(u.im)
             u.im = imagesc(ax, [S.x(1) S.x(end)], [S.y(1) S.y(end)], img);
@@ -197,10 +199,6 @@ app.cb = struct('pair', @onPair, 'sar', @(varargin) refreshSAR(), ...
         full = double([min(v) max(v)]);
         if full(1) >= full(2), full = full(1) + [-0.5 0.5]; end
         if lims(1) >= lims(2), lims = full; end
-        if u.signed                                              % zero-centered for signed products
-            lims = max(abs(lims)) * [-1 1];
-            full = max(abs(full)) * [-1 1];
-        end
         u.sMin.Limits = full; u.sMax.Limits = full;
         u.sMin.Value = max(lims(1), full(1)); u.sMax.Value = min(lims(2), full(2));
         clim(ax, [u.sMin.Value u.sMax.Value]);

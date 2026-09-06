@@ -136,7 +136,7 @@ app.cb = struct('heading', @onHeading, 'terr', @(varargin) refreshTerr(), ...
         maps = containers.Map({'coherence', 'unwrapped_phase', 'wrapped_angle', ...
             'wrapped_amplitude', 'atm_delay_diff', 'dswe'}, {cmapSeq(), cmapDiverging(), hsv(256), ...
             cmapSeq(), cmapDiverging(), cmapDiverging()});
-        signed = ismember(prod, {'unwrapped_phase', 'atm_delay_diff', 'dswe'});  % zero-centered products
+        signed = ismember(prod, {'unwrapped_phase', 'atm_delay_diff', 'dswe'});  % signed products (API flag; clim uses actual quantiles)
         % UAVSAR products auto-span the 5-95% quantiles of the displayed slice
         show(S.axSAR, img, sprintf('%s%s — %s → %s', names(prod), polTxt, ...
             S.pairD1{pi}, S.pairD2{pi}), maps(prod), signed, [5 95]);
@@ -210,7 +210,7 @@ app.cb = struct('heading', @onHeading, 'terr', @(varargin) refreshTerr(), ...
 
     function show(ax, img, titleTxt, cmap, signed, qlims)
         % Draw/update one panel: image, NaN transparency, robust clim, sliders, annotations.
-        if nargin < 5, signed = false; end                       % signed -> clim symmetric about 0
+        if nargin < 5, signed = false; end                       % kept in API; clim no longer zero-centered
         if nargin < 6, qlims = [2 98]; end                       % default robust range
         u = ax.UserData;
         u.img = img; u.signed = signed; u.qlims = qlims;
@@ -253,10 +253,6 @@ app.cb = struct('heading', @onHeading, 'terr', @(varargin) refreshTerr(), ...
         if isfield(u, 'qlims') && ~isempty(u.qlims), q = u.qlims; end
         lims = double(prctile(v, q));
         full = double([min(v) max(v)]);
-        if isfield(u, 'signed') && u.signed                      % diverging map: white pinned at zero
-            lims = max(abs(lims)) * [-1 1];
-            full = max(abs(full)) * [-1 1];
-        end
         if full(1) >= full(2), full = full(1) + [-0.5 0.5]; end  % degenerate (constant) slice
         if lims(1) >= lims(2), lims = full; end
         u.sMin.Limits = full; u.sMax.Limits = full;              % sliders cover the full data range
