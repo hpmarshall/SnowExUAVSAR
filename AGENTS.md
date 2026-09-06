@@ -5,6 +5,40 @@ this repo summarizes the UAVSAR data collected for SnowEx, and starts by buildin
 Use asf_search for accessing UAVSAR data
 Use uavsar_pytools for reading the binary UAVSAR data
 
+## Environment
+All scripts here are run with the conda environment **`myenv`** -- it is the only
+environment on this machine that has zarr, asf_search, uavsar_pytools and
+phase_o_matic together. The repo's default `python` (anaconda3 base) does NOT have
+zarr and cannot open the datacube.
+
+    /opt/anaconda3/envs/myenv/bin/python build_mcs_datacube.py
+
+(or `conda activate myenv` first). Recreate it elsewhere with
+`conda env create -f environment.yml`; `environment-myenv-full.yml` is the exact
+pinned freeze of the environment that produced the pilot datacube.
+
+Credentials the scripts expect: Earthdata login in `~/.netrc` (UAVSAR downloads via
+asf_search) and a CDS API key in `~/.cdsapirc` (ERA5 for phase_o_matic).
+
+Known gotcha: pyproj/rasterio in myenv can pick up the anaconda base env's older
+`proj.db`, breaking every EPSG lookup. Run geospatial scripts with
+`PROJ_DATA=/opt/anaconda3/envs/myenv/share/proj` set.
+
+## MCS pilot GUI (MATLAB)
+`mcs_gui.m` is a four-panel viewer (Terrain/Atmosphere, LIA, UAVSAR, lidar) over the
+pilot datacube. MATLAB here has no zarrread, so it reads `ZARR/mcs_gui.nc`, a
+regenerable NetCDF mirror of the Zarr:
+
+    PROJ_DATA=/opt/anaconda3/envs/myenv/share/proj \
+      /opt/anaconda3/envs/myenv/bin/python export_mcs_gui_nc.py   # rebuild ZARR/mcs_gui.nc
+    /Applications/MATLAB_R2025a.app/bin/matlab                    # then >> mcs_gui
+
+`mcs_annotations.json` (Highway 21 + peak labels, committed) is rebuilt with
+`fetch_mcs_annotations.py`. `mcs_gui_test.m` drives every control headlessly and
+writes screenshots to `gui_test_png/`:
+
+    matlab -sd <repo> -batch mcs_gui_test
+
 ## Area of interest
 Mores Creek Summit, MCS_domain.kml
 

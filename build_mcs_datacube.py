@@ -10,6 +10,7 @@ import glob                    # find MCS_Lidar files per date/product
 import json                    # pair manifest
 import netrc                   # Earthdata credentials
 import os                      # paths
+import re                      # version-agnostic pol-file matching
 import time                    # retry backoff
 import numpy as np             # array math
 import rasterio                # raster IO + reprojection
@@ -154,7 +155,10 @@ def process_pair(rec):
 
     wrapped, unwrapped, coherence = {}, {}, {}
     for pol in ["HH", "HV", "VH", "VV"]:
-        names = [n for n in zf.namelist() if f"L090{pol}_01" in n and n.endswith((".int.grd", ".unw.grd", ".cor.grd", ".ann"))]
+        # product version varies per scene (the 23205 2021-02-03->02-10 bundle is _L090_02, and
+        # hardcoding _01 here silently extracted nothing for it) -- accept any L090{pol}_NN
+        names = [n for n in zf.namelist() if re.search(f"L090{pol}_[0-9]{{2}}", n)
+                 and n.endswith((".int.grd", ".unw.grd", ".cor.grd", ".ann"))]
         for n in names:
             zf.extract(n, extract_dir)
         for ext, store in [("int", wrapped), ("unw", unwrapped), ("cor", coherence)]:

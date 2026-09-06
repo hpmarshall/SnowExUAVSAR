@@ -1,0 +1,31 @@
+# Conda environment for the SnowEx UAVSAR / MCS pilot work.
+# All scripts in this repo are run with this environment's interpreter:
+#   /opt/anaconda3/envs/myenv/bin/python <script>.py
+# Recreate elsewhere with:  conda env create -f environment.yml
+# This file is the curated set of packages the repo actually imports; the exact
+# frozen state of the machine that produced the pilot datacube is in
+# environment-myenv-full.yml.
+name: myenv
+channels:
+  - conda-forge                       # everything geospatial resolves cleanly here
+dependencies:
+  - python=3.10                       # uavsar_pytools / phase_o_matic are pinned to <3.11 behavior
+  - numpy=2.2                         # array math throughout
+  - pandas=2.2                        # flight timestamps, date bookkeeping
+  - scipy=1.14                        # phase_o_matic integration (needs the cumtrapz shim in compute_atm_delay.py)
+  - xarray=2025.4                     # datacube assembly + Zarr I/O
+  - dask=2024.8                       # lazy/chunked reads of the 15 GB datacube
+  - zarr=2.18                         # datacube store format (v2 -- do NOT upgrade to zarr 3 without a rewrite)
+  - netcdf4=1.7                       # per-flight ERA5 + atm-delay .nc files
+  - rasterio=1.4                      # raster IO and regridding onto the canonical 3 m grid
+  - rioxarray=0.15                    # .rio accessor used by compute_atm_delay.py
+  - gdal=3.10                         # geolocation-array warp for the UAVSAR .lkv look vectors
+  - pyproj=3.7                        # CRS transforms
+  - shapely=2.1                       # footprint / overlap geometry
+  - asf_search=13.0                   # UAVSAR search + authenticated download (AGENTS.md "Tools to use")
+  - matplotlib=3.10                   # figures
+  - pip
+  - pip:
+      - uavsar-pytools==0.7.1         # .grd -> GeoTIFF conversion, .ann parsing, incidence angle (AGENTS.md "Tools to use")
+      - phase-o-matic==0.1.0          # ERA5 -> atmospheric phase delay
+      - cdsapi==0.7.7                 # ERA5 downloads for phase_o_matic (needs ~/.cdsapirc)
