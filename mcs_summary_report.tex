@@ -6,7 +6,7 @@
 \usepackage{appendix}
 
 \title{UAVSAR $\Delta$SWE Retrievals at Mores Creek Summit:\\
-\large Selected InSAR pairs for sub-km precipitation-pattern input to snow models}
+\large Selected InSAR pairs for UCLA Data Assimilation testing}
 \author{HP Marshall, Boise State University}
 \date{September 2026}
 
@@ -139,6 +139,9 @@ pairs reach $r = +0.45$ to $+0.65$.
       MATLAB viewer for the subset file --- pair (A--F), polarization, product and
       lidar-date dropdowns over four linked panels.
 \end{itemize}
+
+\section{Software used}
+This workflow used \texttt{asf\_search} to pull UAVSAR data from ASF where possible, and custom scripts to download from the JPL UAVSAR website where needed.  To convert from the binary custom UAVSAR format and calculate local incidence angles from the UAVSAR look vectors, we used \texttt{uavsar\_pytools}.  To estimate the atmospheric phase delay we used \texttt{phase-o-matic}, and to perform the custom unwrapping we used \texttt{SNAPHU}. 
 
 \appendix
 \section{Full pair ranking}
