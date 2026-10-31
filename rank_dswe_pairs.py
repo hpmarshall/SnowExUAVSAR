@@ -67,9 +67,10 @@ if __name__ == "__main__":
     df = pd.DataFrame(rows).round({"r_lidar2020": 3, "r_lidar2021": 3, "crosspol_mean": 3})
     df.to_csv("dswe_lidar_rank.csv", index=False)
 
-    # verification: must reproduce dswe_validation.md's pair-4-HH-vs-2021 value (+0.507)
+    # verification: must reproduce dswe_validation.md's pair-4-HH-vs-2021 value
+    # (+0.569 since the 2026-10-30 corrected-LIA regeneration; was +0.507 before)
     chk = df[(df.pair == 4) & (df.pol == "HH")].r_lidar2021.iloc[0]
-    assert abs(chk - 0.507) < 0.002, f"cross-check vs dswe_validation failed: {chk}"
+    assert abs(chk - 0.569) < 0.002, f"cross-check vs dswe_validation failed: {chk}"
 
     # per-pair summary: mean over pols vs each lidar; matched-season stats drive the rank
     summ = []

@@ -8,6 +8,11 @@ script reimplements just the shape-reading + GDAL geolocation-array warp steps p
 segment (reusing the library's own geocodeUsingGdalWarp, which is segment-agnostic),
 then mosaics the 3 non-overlapping along-track segments and warps straight onto our
 canonical 3 m grid in one step, instead of geolocate_uavsar's native-grid-then-reproject.
+
+The angle itself is the textbook LIA = arccos(l_hat . n_hat) from lia_corrected.py.
+uavsar_pytools' calc_inc_angle (<=0.7.1) is NOT used: it never normalizes the surface
+normal and mis-pairs the DEM gradient with the look-vector components, giving 15-25 deg
+errors on 20-25 deg slopes (SnowEx/uavsar_pytools#54; fix submitted upstream).
 """
 
 import os                                                       # paths
@@ -18,7 +23,9 @@ from rasterio.warp import transform_bounds                       # canonical gri
 import xarray as xr                                               # datacube I/O
 from uavsar_pytools.convert.tiff_conversion import read_annotation  # parse .ann key/value pairs
 from uavsar_pytools.georeference import geocodeUsingGdalWarp     # GDAL geolocation-array warp (segment-agnostic)
-from uavsar_pytools.incidence_angle import calc_inc_angle        # LIA from DEM + look vector
+from lia_corrected import corrected_lia                          # textbook LIA = arccos(l_hat . n_hat); replaces
+                                                                 # uavsar_pytools calc_inc_angle <=0.7.1 (geometry bug,
+                                                                 # see SnowEx/uavsar_pytools#54)
 
 from build_mcs_datacube import GRID_CRS, GRID_TRANSFORM, GRID_WIDTH, GRID_HEIGHT, GRID_Y, GRID_X  # canonical grid
 
@@ -92,9 +99,8 @@ def geocode_line(line):
         for i in range(3):                                        # segments don't overlap in azimuth -> first-valid fill
             fill = np.isnan(merged[i]) & ~np.isnan(seg_raws[i])
             merged[i][fill] = seg_raws[i][fill]
-    # raw0/raw1/raw2 -> lkv_y/lkv_x/lkv_z: matches uavsar_pytools' own (confusingly swapped but self-consistent)
-    # convention, where calc_inc_angle's "x" pairs with the DEM's row-axis gradient and "y" with its column-axis one
-    return {"lkv_y": merged[0], "lkv_x": merged[1], "lkv_z": merged[2]}
+    # the JPL .lkv components are interleaved East, North, Up (sensor->ground, slant-range magnitude)
+    return {"east": merged[0], "north": merged[1], "up": merged[2]}
 
 
 if __name__ == "__main__":
@@ -106,8 +112,7 @@ if __name__ == "__main__":
         print(f"=== geocoding look vector: line {line} ===")
         lkv = geocode_line(line)
         print(f"  computing LIA for line {line}")
-        lia = calc_inc_angle(dem=dem, lkv_x=lkv["lkv_x"], lkv_y=lkv["lkv_y"], lkv_z=lkv["lkv_z"],
-                              pixel_size=PIXEL_SIZE_M)
+        lia = corrected_lia(dem, lkv["east"], lkv["north"], lkv["up"], PIXEL_SIZE_M)
         valid = lia[np.isfinite(lia)]
         print(f"  line {line}: {valid.size} valid px, range {valid.min():.1f}-{valid.max():.1f} deg, "
               f"mean {valid.mean():.1f} deg")
@@ -116,6 +121,11 @@ if __name__ == "__main__":
     lia_da = xr.DataArray(np.stack([lia_by_line[l] for l in LINE_SUFFIX], axis=0),
                            dims=("line", "y", "x"),
                            coords={"line": list(LINE_SUFFIX), "y": GRID_Y, "x": GRID_X},
-                           name="lia", attrs={"units": "degrees", "long_name": "Local incidence angle"})
+                           name="lia", attrs={"units": "degrees", "long_name": "Local incidence angle",
+                                              "method": "arccos(l_hat . n_hat), unit ground->sensor look vector "
+                                                        "and unit surface normal (lia_corrected.py::corrected_lia)",
+                                              "history": "2026-10-30: recomputed with corrected formula; supersedes "
+                                                         "uavsar_pytools calc_inc_angle <=0.7.1 "
+                                                         "(see SnowEx/uavsar_pytools#54)"})
     xr.Dataset({"lia": lia_da}).to_zarr(ZARR_PATH, mode="a")     # add alongside existing variables
     print("Stored 'lia' in", ZARR_PATH)

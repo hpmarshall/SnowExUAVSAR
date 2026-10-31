@@ -52,7 +52,7 @@ VAR_NOTES = {  # units + provenance per data variable
     "dtm": ("m", "MCS\\_Lidar bare-earth DTM", "build\\_mcs\\_datacube.py"),
     "dsm": ("m", "MCS\\_Lidar surface DSM", "build\\_mcs\\_datacube.py"),
     "chm": ("m", "MCS\\_Lidar canopy height", "build\\_mcs\\_datacube.py"),
-    "lia": ("degrees", "JPL .llh/.lkv look vectors + 2023-02-09 DTM", "compute\\_local\\_incidence\\_angle.py"),
+    "lia": ("degrees", "JPL .llh/.lkv look vectors + 2023-02-09 DTM, corrected $\\arccos(\\hat{l}\\cdot\\hat{n})$ (2026-10-30)", "compute\\_local\\_incidence\\_angle.py"),
     "atm_delay": ("radians", "ERA5 delay below aircraft altitude, per flight", "compute\\_atm\\_delay.py"),
     "atm_delay_diff": ("radians", "per-pair delay difference (date2$-$date1)", "compute\\_atm\\_delay\\_diff.py"),
     "dswe": ("m w.e.", "Guneriussen-2001 inversion, $\\rho$=250, SNOTEL-anchored, pair 8 deramped", "compute\\_dswe.py"),

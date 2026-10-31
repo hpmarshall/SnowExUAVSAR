@@ -220,5 +220,9 @@ if __name__ == "__main__":
             flight_line_id=("flight", line_ids), flight_date=("flight", dates))
         atm_delay.name = "atm_delay"
         atm_delay.attrs.update(units="radians", long_name="Atmospheric delay below aircraft altitude")
-        xr.Dataset({"atm_delay": atm_delay}).to_zarr(ZARR_PATH, mode="a")
+        out = xr.Dataset({"atm_delay": atm_delay})               # wrap for the zarr write
+        for v in out.variables.values():                          # cached .nc round-trips leave _FillValue in both
+            v.encoding.pop("_FillValue", None)                    # encoding and attrs, which to_zarr refuses --
+            v.attrs.pop("_FillValue", None)                       # scrub it (NaN already marks missing data)
+        out.to_zarr(ZARR_PATH, mode="a")
         print(f"Stored 'atm_delay' ({len(delays)} flights) in {ZARR_PATH}")

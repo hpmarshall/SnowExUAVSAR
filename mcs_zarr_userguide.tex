@@ -71,7 +71,11 @@ could not be anchored (no coherent unwrapped data within 600\,m of the station) 
 retain an arbitrary constant; the SNAPHU-unwrapped pairs may contain several connected
 components with independent constants. Validation (closure, cross-polarization, SNOTEL,
 lidar) is documented in \texttt{dswe\_validation.md} and summarized in the companion
-report.
+report. Note: \texttt{lia} (and everything derived from it: \texttt{atm\_delay},
+\texttt{atm\_delay\_diff}, \texttt{dswe}) was regenerated on 2026-10-30 with the
+corrected $\arccos(\hat{l}\cdot\hat{n})$ formula, replacing the
+\texttt{uavsar\_pytools} \texttt{calc\_inc\_angle} estimate, which is biased on slopes
+(SnowEx/uavsar\_pytools issue \#54); see \texttt{dswe\_lia\_fix\_impact.md}.
 
 \section{Reading the store}
 

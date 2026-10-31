@@ -33,12 +33,23 @@ Deliverables for the snow modeling team: `mcs_zarr_userguide.pdf`,
 | `uavsar_pair_manifest_mcs.json` | The 22 MCS InSAR pairs (scene name, URL, line, dates, heading) — defines the Zarr's `pair` dimension order |
 | `build_mcs_datacube.py` | Builds `ZARR/mores_creek_summit.zarr`: regrids all MCS lidar (0.5→3 m block-average) and every pair's wrapped/unwrapped phase + coherence (complex-domain regrid for wrapped) onto one 3 m UTM grid; defines the canonical grid constants other scripts import; pol-file matching is product-version-agnostic (`L090{pol}_NN`) |
 | `reingest_pair.py` | Re-processes one pair and region-writes it into the existing Zarr + GUI NetCDF without a rebuild (used to recover the `_L090_02` pair after the version-filter fix) |
-| `compute_local_incidence_angle.py` | Per-line local incidence angle from JPL Stack .llh/.lkv look vectors + the 2023-02-09 lidar DTM (segment-aware, replacing a shape bug in uavsar_pytools); appends `lia` |
+| `compute_local_incidence_angle.py` | Per-line local incidence angle from JPL Stack .llh/.lkv look vectors + the 2023-02-09 lidar DTM (segment-aware, replacing a shape bug in uavsar_pytools); uses the corrected textbook formula from `lia_corrected.py` (uavsar_pytools' `calc_inc_angle` is wrong on slopes — SnowEx/uavsar_pytools#54); appends `lia` |
 | `compute_atm_delay.py` | ERA5 (phase_o_matic) atmospheric phase delay integrated *below aircraft altitude*, per flight; appends `atm_delay`; caches ERA5 + flight times (`atm_delay_flight_times.json`, `atm_delay_run.log`) |
 | `compute_atm_delay_diff.py` | Per-pair delay difference (date2 − date1) matching `unwrapped_phase`; appends `atm_delay_diff` |
 | `unwrap_missing_pairs.py` | SNAPHU (smooth/MCF, 5×5 looks, 2π-snapped back to 3 m) unwrapping of the 5 pairs ASF ships no `.unw.grd` for (9, 12, 14, 20, 21); QC figures `unwrap_qc_pair*.png`; provenance attrs on the Zarr |
 | `atm_delay_flight_times.json` | Cached precise UTC acquisition time per flight (from ASF) |
 | `atm_delay_run.log` | Log of the atmospheric-delay production run |
+
+## LIA deliverable (standalone, lines 05208 & 23205)
+
+| file | what it does |
+|---|---|
+| `export_lia_inputs.py` | Exports the 2023-02-09 3 m DTM from the Zarr to `LIA_PRODUCTS/mcs_dtm_3m.tif`, the terrain input the standalone scripts read |
+| `lia_pytools.py` | Shareable script #1: geocodes the JPL Stack look vectors onto the DTM grid and computes the uavsar_pytools LIA estimate, exactly as the datacube stored it before the 2026-10-30 regeneration (`calc_inc_angle`, unnormalized surface normal) → `LIA_PRODUCTS/lia_<line>_pytools.tif`; caches `lkv_<line>_{east,north,up}.tif` |
+| `lia_corrected.py` | Shareable script #2: textbook LIA = arccos(l̂·n̂) with the unit surface normal → `LIA_PRODUCTS/lia_<line>_corrected.tif`; imports the geocoding helpers from `lia_pytools.py` (ship the two together); its `corrected_lia()` is what the datacube's `lia` now uses |
+| `calc_lia_custom_dem.py` | Computes LIA from the delivered look vectors with any user-supplied DEM (reprojects it onto the 3 m grid, then `corrected_lia`) — for modelers testing other DEMs |
+| `compare_lia_versions.py` | Validates pytools tifs against the Zarr `lia`, checks flat-terrain agreement + look-azimuth geometry, tabulates version differences by slope → `LIA_PRODUCTS/lia_comparison.png` |
+| `dswe_lia_sensitivity.py` | Propagates the LIA version difference through the Guneriussen-2001 inversion: phase-vs-ΔSWE curves by incidence angle, K(θ) sensitivity, and per-class dSWE error table → `LIA_PRODUCTS/dswe_lia_sensitivity.png` |
 
 ## Retrieval, validation, ranking
 
@@ -54,6 +65,7 @@ Deliverables for the snow modeling team: `mcs_zarr_userguide.pdf`,
 | `dswe_retrieval_log.csv` | Per pair×pol retrieval diagnostics (SNOTEL ΔSWE, anchor offset/window, deramp coefficients, coverage) |
 | `dswe_validation.md`, `dswe_vs_lidar.png` | Validation report + scatterplots |
 | `dswe_lidar_rank.md` / `.csv` | Correlation matrix vs both lidar years + the ranked top-5 (+ zero-change example) |
+| `dswe_lia_fix_impact.md` / `.png`, `dswe_lidar_rank_pre_lia_fix.csv` | How the 2026-10-30 corrected-LIA regeneration changed the dSWE-vs-lidar correlations (all delivered pairs improved, selection unchanged), with the pre-fix ranking archived |
 | `snotel_mcs_swe.csv`, `snotel_swe_flights.png` | SNOTEL record and timing figure |
 | `deramp_pair8.png`, `unwrap_qc_pair*.png` | Deramp and unwrapping QC figures |
 
@@ -91,5 +103,6 @@ Deliverables for the snow modeling team: `mcs_zarr_userguide.pdf`,
 | `UAVSAR_INSAR/` | InSAR pair download/processing scratch + per-pair regridded cache |
 | `UAVSAR_LKV/` | JPL Stack .llh/.lkv look-vector files |
 | `ATM_DELAY/` | ERA5 downloads + per-flight delay results |
+| `LIA_PRODUCTS/*.tif`, `LIA_DELIVERY/**/*.tif` | Only the rasters are ignored (global `*.tif` rule); the LIA scripts, figures, and the `LIA_DELIVERY/` manifest README (self-contained hand-off package with the results table) are tracked |
 | `gui_test_png/` | GUI harness screenshots |
 | `asf_uavsar_cache_*.json`, `cmr_lidar_cache.json` | Search query caches |

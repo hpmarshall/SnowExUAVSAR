@@ -8,7 +8,7 @@
 \title{UAVSAR $\Delta$SWE Retrievals at Mores Creek Summit:\\
 \large Selected InSAR pairs for UCLA Data Assimilation testing}
 \author{HP Marshall, Boise State University}
-\date{September 2026}
+\date{September 2026 --- revised October 2026 (corrected local incidence angle)}
 
 \begin{document}
 \maketitle
@@ -46,7 +46,7 @@ criterion is the mean (over four polarizations) Pearson correlation at 90\,m bet
 pair's $\Delta$SWE map and the season-matched lidar snow depth, restricted to pairs whose
 interval contains real snowfall (SNOTEL $\Delta$SWE $\ge$ +10\,mm) with adequate valid
 area ($n_{90} \ge 500$ cells). Pair 4 fails only the snowfall gate: a near-zero-change
-interval whose retrieval still tracks the snowpack pattern ($r = +0.49$ against the lidar
+interval whose retrieval still tracks the snowpack pattern ($r = +0.56$ against the lidar
 it brackets), making it a clean null/redistribution test case for a model.
 
 \begin{table}[h]
@@ -60,7 +60,7 @@ depth at 90\,m; cross-pol is the mean inter-polarization correlation of the retr
 \end{table}
 
 Two features strengthen the top choices: Pair A (pair 8) correlates nearly equally with
-the 2020 lidar ($+0.650$) and the 2021 lidar ($+0.637$), evidence that the accumulation
+the 2020 lidar ($+0.665$) and the 2021 lidar ($+0.668$), evidence that the accumulation
 pattern it captures is the persistent, terrain-controlled one a model precipitation field
 should inherit; and Pairs D/E (pairs 5/6) sample the same early-March snowfall from
 opposite headings, giving a built-in cross-view consistency check.
@@ -90,7 +90,12 @@ subtracted from the unwrapped phase.
 \subsection{Local incidence angle}
 Per-line local incidence angle comes from the JPL Stack look vectors (.lkv/.llh files)
 combined with the 2023-02-09 lidar DTM, mosaicked across the three along-track segments
-and geocoded directly onto the canonical grid. Grazing and back-facing terrain
+and geocoded directly onto the canonical grid. The angle is the textbook
+$\arccos(\hat{l}\cdot\hat{n})$ between the unit ground-to-sensor look vector and the unit
+terrain normal. (Products generated before 2026-10-30 instead used
+\texttt{uavsar\_pytools}' \texttt{calc\_inc\_angle}, which mishandles sloped terrain ---
+15--25$^\circ$ errors on 20--25$^\circ$ slopes; see SnowEx/uavsar\_pytools issue \#54.
+All retrievals in this report use the corrected angle.) Grazing and back-facing terrain
 ($\cos(\mathrm{LIA}) \le 0.05$) is masked.
 
 \subsection{Unwrapping of pairs without an ASF product}
@@ -108,8 +113,8 @@ long-wavelength tilt ($\sim$0.15\,rad\,km$^{-1}$), typical of small aircraft-mot
 baseline errors. The correction fits $\varphi = a + bx + cy + d\,z(\mathrm{DEM})$ at
 90\,m and removes only the planar part; the elevation-correlated term
 ($+0.34$\,rad per 100\,m) is deliberately \emph{kept}, since orographic accumulation is
-itself elevation-correlated. The pair's lidar correlation improved from $+0.635$ to
-$+0.672$.
+itself elevation-correlated. The pair's lidar correlation improved from $+0.661$ to
+$+0.709$.
 
 \subsection{$\Delta$SWE inversion and validation}
 Corrected phase is inverted with the Guneriussen et al.\ (2001) dry-snow relation using
@@ -117,12 +122,12 @@ the real per-pixel incidence angle and new-snow density 250\,kg\,m$^{-3}$, maske
 coherence $< 0.35$, and anchored so the 90\,m window at the MCS SNOTEL matches the
 station's interval $\Delta$SWE (SNOTEL is therefore a \emph{reference}, not an
 independent check). Four validations: (i) phase-closure triangles, RMS 0.5--1.6\,rad
-$\approx$ 7--21\,mm w.e.\ for ASF-product triangles (24--31\,mm where a custom-unwrapped
+$\approx$ 6--19\,mm w.e.\ for ASF-product triangles (16--32\,mm where a custom-unwrapped
 pair participates) --- small against 50--170\,mm storm signals; (ii) cross-polarization
-consistency $r = 0.71$--$0.96$ for the well-observed pairs; (iii) SNOTEL anchor
+consistency $r = 0.74$--$0.97$ for the well-observed pairs; (iii) SNOTEL anchor
 diagnostics (offsets and interval densities logged per pair); (iv) lidar comparisons ---
-the 2021-03-15 survey falls inside pair 4's interval ($r = +0.51$ HH), and the top-ranked
-pairs reach $r = +0.45$ to $+0.65$.
+the 2021-03-15 survey falls inside pair 4's interval ($r = +0.57$ HH), and the top-ranked
+pairs reach $r = +0.48$ to $+0.67$.
 
 \section{Deliverables}
 
@@ -141,7 +146,7 @@ pairs reach $r = +0.45$ to $+0.65$.
 \end{itemize}
 
 \section{Software used}
-This workflow used \texttt{asf\_search} to pull UAVSAR data from ASF where possible, and custom scripts to download from the JPL UAVSAR website where needed.  To convert from the binary custom UAVSAR format and calculate local incidence angles from the UAVSAR look vectors, we used \texttt{uavsar\_pytools}.  To estimate the atmospheric phase delay we used \texttt{phase-o-matic}, and to perform the custom unwrapping we used \texttt{SNAPHU}. 
+This workflow used \texttt{asf\_search} to pull UAVSAR data from ASF where possible, and custom scripts to download from the JPL UAVSAR website where needed.  To convert from the binary custom UAVSAR format we used \texttt{uavsar\_pytools}; local incidence angles are computed with our own corrected implementation of $\arccos(\hat{l}\cdot\hat{n})$ (\texttt{lia\_corrected.py}), after we found and reported a geometry bug in \texttt{uavsar\_pytools}' \texttt{calc\_inc\_angle} (SnowEx/uavsar\_pytools issue \#54; fix submitted upstream).  To estimate the atmospheric phase delay we used \texttt{phase-o-matic}, and to perform the custom unwrapping we used \texttt{SNAPHU}.
 
 \appendix
 \section{Full pair ranking}
