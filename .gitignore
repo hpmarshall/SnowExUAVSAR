@@ -4,6 +4,7 @@ ZARR/
 UAVSAR_INSAR/
 UAVSAR_LKV/
 ATM_DELAY/
+# LIA_PRODUCTS/ and LIA_DELIVERY/ are tracked except their rasters (*.tif rule below)
 *.zip
 *.tif
 *.tiff
